@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[Struct] ADD Editable BIT NULL

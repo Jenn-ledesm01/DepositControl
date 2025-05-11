@@ -1,0 +1,29 @@
+﻿@model DepositControl.Bussines.WarehouseManager
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Eliminar jefe de Depósito</title>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h3>¿Está seguro que desea eliminar el jefe de depósito con DNI: @Model.DNI?</h3>
+        <div>
+            @using (Html.BeginForm("Delete", "WarehouseManager", new { id = Model.Id }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+                    @Html.ActionLink("Volver a la Grilla", "Index", "WarehouseManager")
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

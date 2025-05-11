@@ -1,0 +1,47 @@
+
+@using Bcri.Core.Bussines
+@{var Res = DepositControl.Res.res;}
+@model  Process
+@{
+    Layout = ""; 
+   
+}
+<div class="panel-body">
+    <div class="chat-panel panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-comments fa-fw"></i>
+            @Res.comments
+            <div class="pull-right" id="refresh">
+                <a href="">
+                    <i class="fa fa-refresh fa-fw"></i> @Res.refresh
+                </a>
+            </div>
+        </div>
+
+        <!-- /.panel-heading -->
+        <div class="panel-body" id="chatContainer" data-processid="@Model.Id">
+            @*//se carga por ajax funcion refresh*@
+        </div>
+        <!-- /.panel-body .-->
+
+        @using (Html.BeginForm())
+        {
+            <div class="panel-footer">
+                <div id="alterComments"></div>
+                <div class="input-group">
+                    <input id="message" type="text" class="form-control input-sm" placeholder= @Res.typeYourMessage name="Message" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-warning btn-sm" id="btn-chat"> @Res.send</button>
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+    <div id="CommentsJsData" @*common data para el js*@
+         data-dataurl="@Url.Action("Comments")"
+         data-editurl="@Url.Action("Comments")"
+         data-refresh="@Url.Action("List")">
+
+    </div>
+    @*script en la carpeta script ya que el modulo se carga or ajax*@
+</div>

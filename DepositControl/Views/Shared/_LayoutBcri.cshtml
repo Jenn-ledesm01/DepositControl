@@ -1,0 +1,228 @@
+@using System.Globalization
+@using DNF.Security.Bussines
+@using Exception = System.Exception
+@using System.Configuration
+@using Bcri.Core.Bussines
+@using DepositControl.Areas.Bcri.Utility
+
+@{ 
+    var simulation = Simulation.Dao.GetForUser();
+}
+@{ @*todo sacar este trycatch*@
+var userLogued = string.Empty;
+var Res = DepositControl.Res.res;
+try
+{
+
+    if (Current.User != null)
+    {
+        userLogued = Current.User.FullName;
+    }
+    else
+    {
+        if (ConfigurationManager.AppSettings["UseActiveDirectory"].ToString().ToUpper() == "FALSE")
+        {
+            Response.Redirect("~/Login/Login");
+            return;
+        }
+        else
+        {
+            Response.Redirect("~/Out/SessionExpired");
+            return;
+        }
+
+    }
+}
+catch (Exception ex)
+{
+    FormsAuthentication.SignOut();
+    Response.Redirect("~/Out/", true);
+}
+}
+
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.Name">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <link rel="icon" href="@Url.Content("~/favicon.ico")" />
+
+    <script>
+        processController = '@Url.Action("", "Process")';
+        securityController = '@Url.Action("", "Security")';
+        repositoryController = '@Url.Action("", "Repository")';
+        function refreshAlert() {
+            $("#divAlerts").load(baseUrl + "/Alert/IconAlert");
+        }
+
+
+    </script>
+
+    @Styles.Render("~/Content/bcriCss")
+    @if (BundleTable.Bundles.Any(x => x.Path == "~/Content/DepositControl"))
+    {
+        @Styles.Render("~/Content/DepositControl")
+    }
+    @RenderSection("styles", false)
+    @*
+        base tenplate que tilizamos
+        http://blackrockdigital.github.io/startbootstrap-sb-admin-2/pages/index.html
+    *@
+    <title>@ViewBag.Title</title>
+</head>
+
+<body class="pace-done skin-1">
+    <div class="pace  pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity">
+
+        </div>
+    </div>
+
+    <div id="RepositoryJsData"
+         data-saveurl="@Url.Action("Edit", "Grid")"
+         data-colModeldataurl="@Url.Action("LoadColModelAndData", "Repository")"
+         data-dataurl="@Url.Action("GetData", "Grid")">
+    </div>
+
+    <div id="GridCustomViewJsData"
+         data-save="@Url.Action("Save", "GridCustomView")"
+         data-index="@Url.Action("Index", "GridCustomView")"
+         data-load="@Url.Action("Load", "GridCustomView")"
+         data-delete="@Url.Action("Delete", "GridCustomView")"
+         data-chooseprofiles="@Url.Action("ChooseProfiles", "GridCustomView")"
+         data-setasdefaultme="@Url.Action("SetAsDefaultMe", "GridCustomView")"
+         data-share="@Url.Action("Share", "GridCustomView")"
+         data-setasdefaultforusers="@Url.Action("SetAsDefaultForUsers", "GridCustomView")"
+         data-getowner="@Url.Action("GetOwner", "GridCustomView")"
+         data-rename="@Url.Action("Rename", "GridCustomView")"></div>
+    <div id="block-wrapper">
+        @*<div class="loading-icon"></div>*@
+        <div class="sk-spinner sk-spinner-chasing-dots">
+            <div class="sk-dot1"></div>
+            <div class="sk-dot2"></div>
+        </div>
+    </div>
+
+    <div id="wrapper">
+
+        <!-- Lateral Menu -->
+        @Html.Partial("Sidebar")
+
+        <!-- Page Content -->
+        <div id="page-wrapper" class="gray-bg">
+
+            <!-- Dropdowns Menu Header -->
+            <div class="row border-bottom">
+                <!-- Navigation -->
+                <nav class="navbar navbar-static-top @( Simulation.Dao.GetForUser() != null ? "danger": "")" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    </div>
+
+                    <ul class="nav navbar-top-links navbar-right">
+                        @{
+                            if (simulation != null)
+                            {
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <i class="fa fa-strikethrough fa-fw"></i>: @simulation.Name <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-user">
+                                        <li>
+                                            <a id="leftSimulation" href="#"><i class="fa fa-sign-out fa-fw"></i>Left Simulation</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+
+                        @Html.Partial(SettingsSiteUtility.HeaderUsed)
+
+                        @if (ConfigurationManager.AppSettings["hasAlert"] == "true")
+                        {
+                            <li id="Alerts" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-bell fa-fw" data-toggle="popover" data-trigger="hover"
+                                       data-content="" data-placement="bottom" id="tooltip"></i>
+                                    <i class="fa fa-caret-down"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-alerts" id="menualerts">
+                                    @{
+                                        Html.RenderAction("IconAlert", "Alert");
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        <li>
+                            <a href="@Url.Action("LogOut", "Login")"><i class="fa fa-sign-out"></i>@Res.logOut</a>
+                        </li>
+                        <!-- /.dropdown -->
+                    </ul>
+                </nav>
+
+            </div>
+
+            <div class="row wrapper wrapper-content border-bottom white-bg dashboard-header page-heading" style="padding-top:15px">
+                @RenderBody()
+            </div>
+
+            <div class="footer">
+                @Html.Partial(SettingsSiteUtility.FooterUsed)
+            </div>
+
+        </div>
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/bcriVendor")
+    @Scripts.Render("~/bundles/bcriVendorDxEj")
+    @Scripts.Render($"~/Scripts/devextreme-localization/dx.messages.{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}.js")
+    @* Globalizadas *@
+    @*@Scripts.Render($"~/Scripts/jquery.globalize/cultures/globalize.culture.{CultureInfo.CurrentUICulture.Name}.js");*@
+    @Scripts.Render($"~/Scripts/i18n/grid.locale-{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}.js")
+    @*@Scripts.Render($"~/Scripts/devextreme-localization/dx.webappjs.{CultureInfo.CurrentUICulture.TwoLetterISOLanguageName}.js")*@
+    @* Globalizadas *@
+
+    <script type="text/javascript" src="~/Scripts/bcri.js"></script>
+    <script type="text/javascript" src="~/Scripts/close.js"></script>
+    <script type="text/javascript" src="~/Scripts/dobleTabControl.js"></script>
+
+    @Scripts.Render("~/bundles/bcri")
+
+    @if (BundleTable.Bundles.Any(x => x.Path == "~/bundles/DepositControl"))
+    {
+        @Scripts.Render("~/bundles/DepositControl")
+    }
+
+    @RenderSection("scripts", false)
+</body>
+</html>
+@if (simulation != null)
+{
+    <script>
+        $(document).ready(function() {
+            $('#leftSimulation').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("Left", "Simulation", new {simulation.Id})',
+                    success: function() {
+                        window.location.href = window.location.href;
+                    }
+                });
+            });
+        })
+    </script>
+}
+
+
+
+

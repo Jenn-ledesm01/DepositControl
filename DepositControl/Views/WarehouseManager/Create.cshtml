@@ -1,0 +1,91 @@
+﻿@model DepositControl.Bussines.WarehouseManager
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+    List<SelectListItem> stateList = (List<SelectListItem>)ViewBag.stateList;
+    List<SelectListItem> userList = (List<SelectListItem>)ViewBag.UsuarioList;
+    bool disableSave = ViewBag.NoUsersAlert != null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Crear jefe de Depósito</title>
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @ViewBag.Alert
+        </div>
+    }
+    @if (ViewBag.NoUsersAlert != null)
+    {
+        <div class="alert alert-warning">
+            <strong>Atención:</strong> @ViewBag.NoUsersAlert
+        </div>
+    }
+    @using (Html.BeginForm("Create", "WarehouseManager", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h1><b>Crear jefe de Depósito</b></h1>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Fecha de Inicio</label>
+                <div class="col-sm-4">
+                    @Html.TextBox("StartDate", null, new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessage("StartDate", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">DNI</label>
+                <div class="col-sm-4">
+                    @Html.TextBox("DNI", null, new { @class = "form-control" })
+                    @Html.ValidationMessage("DNI", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Usuario</label>
+                <div class="col-sm-4">
+                    @Html.DropDownList("User", userList, new { @class = "form-control" })
+                    @Html.ValidationMessage("User", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Estado</label>
+                <div class="col-sm-4">
+                    @Html.DropDownList("StateWarehouseManager", stateList, new { @class = "form-control" })
+                    @Html.ValidationMessage("StateWarehouseManager", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Crear" class="btn btn-default" @(disableSave ? "disabled" : "")/>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Volver a la Grilla", "Index", "WarehouseManager")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</body>
+</html>

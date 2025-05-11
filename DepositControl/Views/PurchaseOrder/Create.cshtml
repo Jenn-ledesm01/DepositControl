@@ -1,0 +1,255 @@
+﻿@model DepositControl.Bussines.PurchaseOrder
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+    List<SelectListItem> productList = (List<SelectListItem>)ViewBag.ProductList;
+    List<SelectListItem> stateList = (List<SelectListItem>)ViewBag.StatePurchaseOrderList;
+    List<SelectListItem> salePointList = (List<SelectListItem>)ViewBag.SalePointList;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Crear Órden de Compra</title>
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @ViewBag.Alert
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "PurchaseOrder", FormMethod.Post, new { @id = "purchaseOrderForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h1><b>Crear Orden de Compra</b></h1>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+        <div class="col-sm-3">
+            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Number, "Número", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+        <div class="col-sm-3">
+            @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número de la Órden de compra" })
+            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.SalePoint, "Punto de Venta", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+        <div class="col-sm-3">
+            @Html.DropDownList("SalePoint", salePointList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.SalePoint, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.StatePurchaseOrder, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+        <div class="col-sm-3">
+            @Html.DropDownListFor(model => model.StatePurchaseOrder, stateList, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.StatePurchaseOrder, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <br />
+    <h4>Detalles</h4>
+    <table class="table" id="detailsTable">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select" })
+                    @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
+                    @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                </td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-default removeDetail">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group text-right">
+        <div class="col-md-12">
+            <button type="button" id="addDetail" class="btn btn-default">Agregar Detalle</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="col-md-7 text-right">
+                @Html.LabelFor(model => model.TotalAmount, "Monto Total", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-3">
+                @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", @type = "number", @step = "0.01", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-8 text-right">
+            <input type="submit" value="Crear" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+    }
+
+    <div>
+        @Html.ActionLink("Volver a la Grilla", "Index", "PurchaseOrder")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+            // Obtener los precios de los productos desde el ViewBag
+            const productPrices = @Html.Raw(Json.Encode(ViewBag.ProductPrices));
+             const productList = @Html.Raw(Json.Encode(ViewBag.ProductList));
+
+            $(document).ready(function () {
+                function calculateTotal() {
+                    let total = 0;
+                    $('#detailsTable tbody tr').each(function () {
+                        let quantity = parseFloat($(this).find('.quantity-input').val()) || 0;
+                        let price = parseFloat($(this).find('.price-input').val()) || 0;
+                        total += quantity * price;
+                    });
+                    $('#TotalAmount').val(total.toFixed(2));
+                }
+
+                function getSelectedProducts() {
+                    let selected = [];
+                    $('#detailsTable tbody tr').each(function () {
+                        let productId = $(this).find('.product-select').val();
+                        if (productId && productId !== '') {
+                            selected.push(productId);
+                        }
+                    });
+                    return selected;
+                }
+
+                function updateProductOptions(selectElement, selectedProducts, selectedValue) {
+                    selectElement.empty();
+
+                    productList.forEach(function (item) {
+                        if (!selectedProducts.includes(item.Value) || item.Value === selectedValue) {
+                            selectElement.append(
+                                $('<option></option>').val(item.Value).text(item.Text)
+                            );
+                        }
+                    });
+
+                    if (selectedValue) {
+                        selectElement.val(selectedValue);
+                    }
+                }
+
+                function updateAllProductSelects() {
+                    let selectedProducts = getSelectedProducts();
+                    $('#detailsTable tbody tr').each(function () {
+                        let select = $(this).find('.product-select');
+                        let currentValue = select.val();
+                        updateProductOptions(select, selectedProducts, currentValue);
+                    });
+                }
+
+                $('#addDetail').click(function () {
+                    let rowCount = $('#detailsTable tbody tr').length;
+                    let newRow = $('#detailsTable tbody tr:first').clone();
+                    newRow.find('input, select').val('');
+                    newRow.find('select').prop('selectedIndex', 0);
+                    newRow.find('select, input').each(function () {
+                        let name = $(this).attr('name');
+                        if (name) {
+                            $(this).attr('name', name.replace('Details[0]', `Details[${rowCount}]`));
+                        }
+                    });
+                    newRow.find('.text-danger').remove();
+                    $('#detailsTable tbody').append(newRow);
+                    updateAllProductSelects();
+                    calculateTotal();
+                });
+
+                $(document).on('click', '.removeDetail', function () {
+                    if ($('#detailsTable tbody tr').length > 1) {
+                        $(this).closest('tr').remove();
+                        updateAllProductSelects();
+                        calculateTotal();
+                    }
+                });
+
+                $(document).on('input', '.quantity-input', function () {
+                    calculateTotal();
+                });
+
+                //$('#purchaseOrderForm').on('submit', function () {
+                //    $('#detailsTable tbody tr').each(function (index) {
+                //        $(this).find('select, input').each(function () {
+                //            let name = $(this).attr('name');
+                //            if (name) {
+                //                let newName = name.replace(/\[\d+\]/, `[${index}]`);
+                //                $(this).attr('name', newName);
+                //            }
+                //        });
+                //    });
+                //});
+
+                $('#purchaseOrderForm').on('submit', function () {
+                    $('#detailsTable tbody tr').each(function (index) {
+                        $(this).find('select, input').each(function () {
+                            let name = $(this).attr('name');
+                            if (name) {
+                                $(this).attr('name', name.replace(`Details[${index}]`, `Details[${index}]`));
+                            }
+                        });
+                    });
+                });
+
+
+                $(document).on('change', '.product-select', function () {
+                    let row = $(this).closest('tr');
+                    let priceInput = row.find('.price-input');
+                    let selectedProductId = $(this).val();
+
+                    if (productPrices[selectedProductId]) {
+                        priceInput.val(productPrices[selectedProductId].toFixed(2));
+                    } else {
+                        priceInput.val('');
+                    }
+
+                    calculateTotal();
+                });
+
+                updateAllProductSelects();
+                calculateTotal();
+            });
+</script>
+    }
+</body>
+</html>

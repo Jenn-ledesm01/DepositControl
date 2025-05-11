@@ -1,0 +1,242 @@
+@using DNF.Security.Bussines
+@{var Res = DepositControl.Res.res;}
+
+@{
+    ViewBag.Title = Res.users;
+}
+
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>Usuarios</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div id="buttonExport" style="text-align:right;">
+            <div class="menuRibbon-item">
+                <!-- New Crear usuario button -->
+                <button type="button" class="btn btn-primary btn-lg" onclick="javascript: openCreateUserPopup();" title="Crear usuario">
+                    <i class="fa fa-user-plus"></i>
+                </button>
+            </div>
+            <div class="menuRibbon-item">
+                @if (ViewBag.HabilitadoBotonExportXls)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="CallBtnExportXls();" title="Descargar Excel">
+                        <i class="fa fa-file-excel-o"></i>
+                    </button>
+                }
+                @if (ViewBag.HabilitadoBotonExportPdf)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="CallBtnExportPdf();" title="Descargar PDF">
+                        <i class="fa fa-file-pdf-o"></i>
+                    </button>
+                }
+                @if (ViewBag.HabilitadoBotonExportTxt)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="CallBtnExportTxt();" title="Descargar TXT">
+                        <i class="fa fa-file-text-o"></i>
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel-body">
+                <div class="col-lg-12">
+                    <table id="jqGridUsers"></table>
+                    <div id="jqGridUsersPager"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profilesControl" style="display: none">
+            @* Plantilla para la edición de usuarios *@
+            <ul class="list-group checked-list-box" style="max-height: 200px; overflow: auto;">
+                @foreach (var profile in (List<SelectListItem>)ViewBag.Profiles)
+                {
+                    <li class="list-group-item">
+                        <label class="checkbox"><input type="checkbox" class="" value="@profile.Value">@profile.Text</label>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear Usuario -->
+<div class="modal fade" id="createUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="position:static;">
+            <div class="modal-header">
+                <h3 class="modal-title">Crear Nuevo Usuario</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createUserForm">
+                    <div class="form-group">
+                        <label for="Name">Nombre de Usuario</label>
+                        <input type="text" class="form-control" id="Name" name="Name" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="FullName">Nombre Completo</label>
+                        <input type="text" class="form-control" id="FullName" name="FullName" maxlength="250" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email">E-Mail</label>
+                        <input type="email" class="form-control" id="Email" name="Email" maxlength="250" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="State_Code">Estado</label>
+                        <select class="form-control" id="State_Code" name="State_Code" required>
+                            <option value="Enable">Habilitado</option>
+                            <option value="Disable">Deshabilitado</option>
+                        </select>
+                    </div>
+                    @if (!Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["UseActiveDirectory"]))
+                    {
+                        <div class="form-group">
+                            <label for="Password">Contraseña</label>
+                            <input type="password" class="form-control" id="Password" name="Password" maxlength="50" required>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label for="Profiles">Perfiles</label>
+                        <div id="profilesControlModal" style="max-height: 200px; overflow: auto;">
+                            <ul class="list-group checked-list-box">
+                                @foreach (var profile in (List<SelectListItem>)ViewBag.Profiles)
+                                {
+                                    <li class="list-group-item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="Profiles" value="@profile.Value">@profile.Text
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="submitCreateUserForm()">Crear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="UsersJsData"
+     data-dataUrl="@Url.Action("UsersData")"
+     data-editUrl="@Url.Action("UserEdit")"
+     data-password="@System.Configuration.ConfigurationManager.AppSettings["UseActiveDirectory"]"
+     data-accessEdit="@Current.User.HasAccess("UserEdit").ToString().ToLower()"
+     data-accessNew="@Current.User.HasAccess("UserNew").ToString().ToLower()"
+     data-accessDelete="@Current.User.HasAccess("UserDelete").ToString().ToLower()">
+</div>
+
+<script type="text/javascript">
+    // Definir recursos para validaciones
+    var res = {
+        name: '@Res.name',
+        fullname: '@Res.fullname',
+        mail: '@Res.mail',
+        state: '@Res.state',
+        mustselectoneprofileuser: '@Res.mustselectoneprofileuser',
+        usermusthavepassword: '@Res.usermusthavepassword',
+        enable: '@Res.enable',
+        disable: '@Res.disable'
+    };
+
+    function CallBtnExportXls() {
+        var urlGrid = '@Url.Action("exportExcel", "Security")?tittle=' + "Usuarios" + "&fromDate=" + "" + "&toDate=" + "" + "&act01=" + "";
+        window.location.href = urlGrid;
+    }
+
+    function CallBtnExportPdf() {
+        var urlGrid = '@Url.Action("exportPDF", "Security")?tittle=' + "Usuarios" + "&fromDate=" + "" + "&toDate=" + "" + "&act01=" + "";
+        window.location.href = urlGrid;
+    }
+
+    function CallBtnExportTxt() {
+        var urlGrid = '@Url.Action("exportTXT", "Security")?tittle=' + "Usuarios" + "&fromDate=" + "" + "&toDate=" + "" + "&act01=" + "";
+        window.location.href = urlGrid;
+    }
+
+    function openCreateUserPopup() {
+        // Limpiar el formulario
+        $('#createUserForm')[0].reset();
+        $('#profilesControlModal').find('input[type=checkbox]').each(function () {
+            $(this).prop('checked', false).closest('li').css('background-color', '');
+            $(this).parent().css('color', 'black');
+        });
+        $('#createUserModal').modal('show');
+    }
+
+    function submitCreateUserForm() {
+        var Common = $("#UsersJsData").data();
+        var gridTable = "#jqGridUsers";
+        var formData = {
+            Name: $('#Name').val(),
+            FullName: $('#FullName').val(),
+            Email: $('#Email').val(),
+            State_Code: $('#State_Code').val(),
+            Password: $('#Password').val() || '',
+            Profiles: $('input[name="Profiles"]:checked').map(function () { return this.value; }).get().join(','),
+            Id: '_empty' // Para indicar que es un nuevo registro
+        };
+
+        // Validaciones manuales
+        if (!formData.Name) {
+            alert(res.name + ' es requerido');
+            return;
+        }
+        if (!formData.FullName) {
+            alert(res.fullname + ' es requerido');
+            return;
+        }
+        if (!formData.Email) {
+            alert(res.mail + ' es requerido');
+            return;
+        }
+        if (!formData.State_Code) {
+            alert(res.state + ' es requerido');
+            return;
+        }
+        if (!formData.Profiles) {
+            alert(res.mustselectoneprofileuser);
+            return;
+        }
+        if (!Common.password && !formData.Password) {
+            alert(res.usermusthavepassword);
+            return;
+        }
+        // Validación adicional para correo sin mayúsculas
+        if (/[A-Z]/.test(formData.Email)) {
+            alert('El correo no debe contener mayúsculas');
+            return;
+        }
+
+        // Enviar los datos usando la lógica de jqGrid
+        $.ajax({
+            url: Common.editurl,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                $('#createUserModal').modal('hide');
+                $(gridTable).jqGrid('setGridParam', { datatype: 'json' }).trigger('reloadGrid');
+            },
+            error: function (xhr) {
+                alert('Error: ' + xhr.responseText);
+            }
+        });
+    }
+</script>
+
+@section scripts {
+    @Scripts.Render("~/Areas/Bcri/Views/Security/Users.js")
+}

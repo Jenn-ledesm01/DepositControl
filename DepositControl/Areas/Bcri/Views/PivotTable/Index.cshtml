@@ -1,0 +1,150 @@
+
+@{var Res = DepositControl.Res.res;}
+<div class="container-fluid">
+    <div class="row">
+        <h1 class="page-header">Pivot Table</h1>
+    </div>
+    <div class="row">
+        <div id="filterDiv">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button id="btnToggleFilters" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#panelBodyFilter">
+                        @Res.data<span class="fa fa-unsorted" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="panel-body collapse" id="panelBodyFilter">
+                    <div class="row" style="padding-bottom: 10px; display: inherit">
+                        <div class="col-md-3">
+                            <label for="selectDataSourceFilters" class="small alignText">@Res.dataSource</label>
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownList("selectDataSourceFilters",
+                                (List<SelectListItem>)ViewBag.tmpDataSource,
+                                new { @class = "form-control input-sm", placeholder =  Res.selectDataSource })
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3"></div>
+                    </div>
+                    <div class="row" style="padding-bottom: 2px;">
+                        <div class="col-md-3">
+                            <div class="" style="">
+                                <label for="selectDateRangeFilters" class="small alignText">
+                                    <input type="radio" name="radioFilter" id="radioFilterPeriod" value="optPeriod" checked> @Res.filterByTimeRange
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="selectDateRangeFilters" class="form-control input-sm">
+                                <option value="todayDate">@Res.today</option>
+                                <option value="lastWeek">@Res.lastWeek</option>
+                                <option value="lastMonth">@Res.lastMonth</option>
+                                <option value="lastSixMonths">@Res.lastSixMonth</option>
+                                <option value="lastYear">@Res.lastYear</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-outline btn-primary" id="btnFilter">
+                                <span class="fa fa-search" aria-hidden="true"></span> @Res.filter
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom: 2px;">
+                        <div class="col-md-3">
+                            <div>
+                                <label for="selectDateRangeFilters" class="small alignText">
+                                    <input type="radio" name="radioFilter" id="radioFilterDate" value="optDate">@Res.filterByDateRange
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control input-sm" id="filterDateFromFilters"
+                                   name="filterDateFromFilters" placeholder=@Res.from>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control input-sm" id="filterDateToFilters"
+                                   name="filterDateToFilters" placeholder=@Res.to>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-outline btn-primary" id="btnClearFilter">
+                                <span class="fa fa-repeat" aria-hidden="true"></span> @Res.cleanFilters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="panel-footer"></div>*@
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div id="progressBar" class="progress displayDiv">
+            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                <span id="progressBarLabel" class="show">@Res.loading</span>
+            </div>
+        </div>
+        <div id="dashBoard" class="dashBoard displayDiv alert-info">
+            <div id="queryDiv" style="margin-bottom: -20px; padding-top: 10px; padding-right: 10px; padding-left: 10px;">
+                <div class="navbar navbar-default viewHeading">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <form class="form-inline" role="form" id="valid-form-queryDiv">
+                                <span class="navbar-brand">@Res.reports </span>
+                                <div id="divLoadModeQuery" class="form-group" style="padding-top: 10px;">
+                                    <select id="selectSavedQueries" class="form-control"></select>
+                                    <button type="button" class="btn btn-outline btn-primary" id="btnAddQuery"
+                                            data-toggle="tooltip" data-placement="top" title= @Res.saveNewReport>
+                                        <span class="fa fa-plus" aria-hidden="true"></span>
+                                    </button>
+                                    <div id="divBtnSaveDeleteQuery" style="display: inline;">
+                                        <button type="button" class="btn btn-outline btn-primary" id="btnSaveCurrentQuery"
+                                                data-toggle="tooltip" data-placement="top" title=@Res.saveCurrentReport>
+                                            <span class="fa fa-save" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline btn-primary" id="btnDeleteQuery"
+                                                data-toggle="tooltip" data-placement="top" title=@Res.deleteSelectedReport>
+                                            <span class="fa fa-trash-o" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="divEditModeQuery" class="form-group" style="padding-top: 10px; padding-bottom: 10px">
+                                    <input type="text" class="form-control input-sm" id="inputNameNewQuery"
+                                           name="inputNameNewQuery" placeholder=@Res.name>
+                                    <button type="button" class="btn btn-outline btn-primary" id="btnSaveQuery"
+                                            data-toggle="tooltip" data-placement="top" title=@Res.save>
+                                        <span class="fa fa-check-circle-o" aria-hidden="true"></span> @Res.save
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-primary" id="btnCancelSaveQuery"
+                                            data-toggle="tooltip" data-placement="top" title=@Res.cancel>
+                                        <span class="fa fa-ban" aria-hidden="true"></span> @Res.cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <textarea id="configPivotTable" class="displayDiv" readonly></textarea>
+            <div id="outputPivotTable" style="padding: 10px;"></div>
+        </div>
+    </div>
+</div>
+
+@section styles {
+    @Styles.Render("~/Content/cssPivot")
+}
+
+<div id="PivotTableJsData"
+     data-loaddataurl="@Url.Action("FilterInfo", "PivotTable")"
+     data-loadqueryinfourl="@Url.Action("LoadQueryInfo", "PivotTable")"
+     data-checkqueryurl="@Url.Action("CheckQuery", "PivotTable")"
+     data-loadqueryurl="@Url.Action("LoadQuery", "PivotTable")"
+     data-savequeryurl="@Url.Action("SaveQuery", "PivotTable")"
+     data-deletequeryurl="@Url.Action("DeleteQuery", "PivotTable")">
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/pivot")
+    @Scripts.Render("~/Areas/Bcri/Views/PivotTable/Index.js")
+}

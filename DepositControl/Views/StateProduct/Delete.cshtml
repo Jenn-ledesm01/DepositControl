@@ -1,0 +1,29 @@
+﻿@model DepositControl.Bussines.StateProduct
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Eliminar Estado de Producto</title>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h3>¿Está seguro que desea eliminar el estado de producto: @Model.Name?</h3>
+        <div>
+            @using (Html.BeginForm("Delete", "StateProduct", new { id = Model.Id }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+                    @Html.ActionLink("Volver a la Grilla", "Index", "StateProduct")
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DepositControl.Bussines.Product>
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Inventario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        .card {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            display: inline-block;
+            width: 45%;
+            text-align: center;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #6c757d; /* gris */
+        }
+
+        .stock-red {
+            background-color: #ffcccc;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 5px 10px;
+            display: inline-block;
+        }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+            text-align: center;
+        }
+
+            .table td:first-child {
+                text-align: left;
+            }
+    </style>
+</head>
+<body>
+    <div>
+        <h1><b>Inventario</b></h1>
+
+        <div>
+            <div class="card">
+                <i class="fa-solid fa-box icon"></i>
+                <h3>Total Productos</h3>
+                <p style="font-size: 24px; font-weight: bold;">@ViewBag.TotalProductos</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-triangle-exclamation icon"></i>
+                <h3>Bajo Stock</h3>
+                <p style="font-size: 24px; font-weight: bold;">@ViewBag.ProductosBajoStock</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; width: 92%">
+            <h3>Productos con Bajo Stock</h3>
+
+            <table class="table table-bordered table-hover" style="background-color:white; margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; width:50%;">Nombre del Producto</th>
+                        <th style="text-align:left;">Stock Actual</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var producto in Model)
+                    {
+                        <tr>
+                            <td style="text-align:left;">@producto.Name</td>
+                            <td>
+                                <span class="stock-red">@producto.Stock.Quantity unidades</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

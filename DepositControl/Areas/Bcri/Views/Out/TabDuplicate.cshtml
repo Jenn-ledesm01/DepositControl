@@ -1,0 +1,14 @@
+
+@{var Res = DepositControl.Res.res;}
+@{
+	Layout = "_LayoutOut.cshtml";
+	ViewBag.Title = Res.duplicateTab;
+}
+
+
+<img src="~/Content/images/duplicatedSession.png" />
+<p class="">@Res.mensajeDuplicateTab</p>
+<a onclick="javascript: window.close();">
+	<div class="btn btn-success ">@Res.close</div>
+</a>
+

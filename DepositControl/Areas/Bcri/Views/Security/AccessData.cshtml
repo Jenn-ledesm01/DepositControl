@@ -1,0 +1,136 @@
+@model DNF.Security.Bussines.Access
+
+@{var Res = DepositControl.Res.res;}
+@{
+    ViewBag.Title = Res.access + Model.Name;
+}
+
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>
+            @(Model.Name ?? Res.newAccess ) (@if (!Model.IsNew())
+                {@Model.Id;
+            })
+        </h5>
+        <div class="ibox-tools">
+            <a id="access-save" class="btn btn-success btn-xs font-color-white">@Res.save <i class="fa fa-save"></i></a>
+            @if (Model.IsNew())
+            {
+                <a id="access-cancel" class="btn btn-danger btn-xs font-color-white">@Res.cancel<i class="fa fa-times"></i></a>
+            }
+        </div>
+    </div>
+    <div class="ibox-content">
+        <form id="form-access-data">
+            <fieldset>
+                <div class="form-group">
+                    @{
+                        var allTypes = new DNF.Type.Bussines.Type("Access").AllTypes;
+
+                        var defaultType = allTypes.Where(x => x.IsDefault)
+                                            .FirstOrDefault() ?? allTypes.FirstOrDefault();
+
+                    }
+                    <label>@Res.res.type</label>
+                    @Html.DropDownListFor(
+                            x => x.Type.Id,
+                            new DNF.Type.Bussines.Type("Access")
+                                                 .AllTypes
+                                                 .Select(t =>
+                                                    new SelectListItem
+                                                    {
+                                                        Value = t.Id.ToString(),
+                                                        Text = t.Code,
+                                                        Selected = Model.Type != null ? t.Id == Model.Type.Id : t.Id == defaultType.Id
+                                                    }
+                                                 ),
+                                                 new {
+                                                    @class = "form-control"
+                                                 }
+                            )
+                </div>
+
+                <div class="form-group">
+                    <label>@Res.res.name</label>
+                    @Html.EditorFor(x => x.Name, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    <label>@Res.res.description</label>
+                    @Html.EditorFor(x => x.Description, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    <label>@Res.res.code</label>
+                    @Html.EditorFor(x => x.Code, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Url)
+                    @Html.EditorFor(x => x.Url, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="form-group">
+                    <label>Icono</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i id="preview-Icon" class="@Model.Icon"></i></span>
+                        @Html.EditorFor(x => x.Icon, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <small class="form-text text-muted">@Res.helpBlockFontAwesome <a href="https://fontawesome.com/icons?d=gallery"><i class="fa fa-external-link"></i></a></small>
+                </div>
+
+                @*Elementos que el usurio no deberia de cambiar desde esta pantalla*@
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.Data)
+                @Html.HiddenFor(x => x.Posicion)
+                @Html.HiddenFor(x => x.Parent.Id)
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div style="position: absolute;top: 0; right: 0; display: inline" class="fade in out" id="alerts-AccessData">
+
+</div>
+
+<script>
+
+    var callback_saveSuccess = function () { };
+    var callback_saveError = function () { };
+
+    var PrintSuccess = function (msg) {
+        $("#alerts-AccessData").showAlert(msg, "success", 2000);
+    }
+
+    var PrintError = function (msg) {
+        $("#alerts-AccessData").showAlert(msg, "error", 10000);
+    }
+
+    $(function () {
+        var btnSave = $("#access-save");
+        var $form = $("#form-access-data");
+        $(btnSave).on("click", function (e) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveAccessData", "Security")",
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    if (response.anyError == true) {
+                        PrintError(response.mensageResponse);
+                        callback_saveError();
+                    } else {
+                        PrintSuccess(response.mensageResponse);
+						callback_saveSuccess(response.access);
+                    }
+                },
+                error: function (e) {
+                    if (typeof callback_saveSuccess === 'function') {
+                        callback_saveError();
+                    }
+                }
+            });
+        });      
+
+        $("#Icon").on('input', function (e) {
+            $("#preview-Icon").attr('class', '');
+            $("#preview-Icon").addClass($("#Icon").val());
+        });
+    });
+</script>

@@ -1,0 +1,29 @@
+@{ Layout = "";}
+<div class="form-group col-lg-6">   
+   <div class="celdas">
+        @Html.DropDownList("TypeAccion", new SelectList(ViewBag.tmpTipoAccion, "Id", "Name"), new { @class = "form-control" })
+    </div>
+    <div class="celdas">
+        @Html.ListBox("ddAccion", new SelectList(new string[] { }), "---Select---")
+        </div>
+
+
+</div>
+
+<script type="text/javascript">
+    function obtenerDdAcciones(){
+        var param='';       
+        var selected = $('#ddAccion');       
+        selected.each(function () {
+            if ($(this).val() !=  null) {
+                param = param + $(this).val() + ',';
+            }
+            
+        });
+        return param;
+    };
+    function checkAll() {        
+        return totalSelected;
+    };
+</script>
+

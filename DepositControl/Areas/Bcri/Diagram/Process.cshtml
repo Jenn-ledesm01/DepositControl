@@ -1,0 +1,62 @@
+@using DepositControl.Areas.Bcri.Models
+@model WizardProcess
+@{
+    string processCode = !string.IsNullOrEmpty(Convert.ToString(ViewBag.Process)) ? ViewBag.Process : "";
+}
+
+<style>
+    #myDiagramDiv {
+        border:solid 1px #CCCCCC !important;
+    }
+</style>
+
+<div class="container-fluid">
+    <h1 class="page-header">Business Logic @Html.Raw(processCode)</h1>
+
+    <div class="row">
+        <div class="form-group col-lg-6">
+            @Html.DropDownList("processes", (List<SelectListItem>)ViewBag.Processes, new { @class = "form-control", placeholder = "Select a Process" })
+            @Html.Hidden("processCode", processCode)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="myDiagramDiv"></div>
+        </div>
+    </div>
+</div>
+
+<script id="htmlTemplate" type="text/x-jsrender">
+    <div>
+        <div><b>Code:</b> {{:pCode}}</div>
+        <div><b>Type:</b> {{:pTypeName}}</div>
+        <div><b>Entity:</b> {{:pEntityName}}</div>
+    </div>
+</script>
+
+<script id="template" type="text/x-jsrender">
+    <div style="padding-left: 8px; padding-right: 8px; height: 30px; line-height: 30px; overflow: hidden; text-align: center;">{{:pCode}}</div>
+</script>
+
+<script id="templateInputOutputConfig" type="text/x-jsrender">
+    <div style="padding: 8px; height: 100%; overflow: hidden; text-align: center;">
+        <i class="fa fa-database" aria-hidden="true"></i>
+        <div style="margin-top: 8px;">
+            {{:pCode}}
+        </div>
+    </div>
+</script>
+
+<script id="templateProcessConfig" type="text/x-jsrender">
+    <div style="padding: 8px; height: 100%; overflow: hidden; text-align: center;">
+        <i class="fa fa-cogs fa-2x" aria-hidden="true"></i>
+        <div style="margin-top: 16px;">
+            <a href="{{:pUrl}}">{{:pCode}}</a>
+        </div>
+    </div>
+</script>
+
+@section scripts {
+    @Scripts.Render("~/Diagram/Process.js")
+}

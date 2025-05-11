@@ -1,0 +1,29 @@
+﻿@model DepositControl.Bussines.SalePoint
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Eliminar Punto de Venta</title>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h3>¿Está seguro que desea eliminar el punto de venta: @Model.Name?</h3>
+        <div>
+            @using (Html.BeginForm("Delete", "SalePoint", new { id = Model.Id }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+                    @Html.ActionLink("Volver a la Grilla", "Index", "SalePoint")
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

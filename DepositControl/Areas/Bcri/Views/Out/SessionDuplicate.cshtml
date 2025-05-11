@@ -1,0 +1,14 @@
+
+@{var Res = DepositControl.Res.res;}
+@{
+	Layout = "_LayoutOut.cshtml";
+	ViewBag.Title = Res.duplicateSession;
+}
+
+
+<img src="~/Content/images/duplicatedSession.png" />
+<p class="">@Res.mensajeDuplicateSession</p>
+<a href="@Url.Action("UseThisSession","Login")">
+	<div class="btn btn-success ">@Res.useHere</div>
+</a>
+

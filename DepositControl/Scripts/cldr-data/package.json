@@ -1,0 +1,77 @@
+{
+  "_from": "cldr-data",
+  "_id": "cldr-data@34.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-gh1P6ODImIi8F+p+XaGc9mV9Hgyd5rZSdvX1pfKvFPbaKLRZbKfmpr47NeV3oQDD2llMnSwXUUNnJo3aVnxu8w==",
+  "_location": "/cldr-data",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cldr-data",
+    "name": "cldr-data",
+    "escapedName": "cldr-data",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cldr-data/-/cldr-data-34.0.0.tgz",
+  "_shasum": "728f03a423bbc311550600116266554772d736b5",
+  "_spec": "cldr-data",
+  "_where": "C:\\Source\\BCRI\\Bcri.Web\\Scripts",
+  "author": {
+    "name": "Rafael Xavier de Souza",
+    "email": "rxaviers@gmail.com",
+    "url": "http://rafael.xavier.blog.br"
+  },
+  "bugs": {
+    "url": "https://github.com/rxaviers/cldr-data-npm/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "cldr-data-downloader": "0.3.x",
+    "glob": "5.x.x"
+  },
+  "deprecated": false,
+  "description": "Npm module for Unicode CLDR JSON data",
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-jshint": "0.10.x",
+    "grunt-dco": "0.0.3",
+    "matchdep": "*"
+  },
+  "files": [
+    "DCO.md",
+    "index.js",
+    "install.js",
+    "urls.json"
+  ],
+  "homepage": "https://github.com/rxaviers/cldr-data-npm",
+  "keywords": [
+    "unicode",
+    "CLDR",
+    "JSON",
+    "data"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/rxaviers/cldr-data-npm/blob/master/LICENSE"
+    }
+  ],
+  "main": "index.js",
+  "name": "cldr-data",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rxaviers/cldr-data-npm.git"
+  },
+  "scripts": {
+    "install": "node install.js",
+    "test": "grunt && node test/index.js"
+  },
+  "version": "34.0.0"
+}

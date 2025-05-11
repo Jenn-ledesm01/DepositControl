@@ -1,0 +1,70 @@
+<script type="text/javascript">
+
+
+
+        function createCookie(name, value, expirationDate) {
+            var expires = expirationDate != null ? 'expires=' + expirationDate.toString() + ';' : '';
+            document.cookie = name + '=' + value + ';' + expires;  
+        }
+
+        function readCookie(name) {
+            var nameEq = name + "=";
+            var ca = document.cookie.split(";");
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === " ") {
+                    c = c.substring(1, c.length);
+                }
+                if (c.indexOf(nameEq) === 0) {
+                    return c.substring(nameEq.length, c.length);
+                }
+            }
+            return '';
+        }
+
+        $(document).ready(function ()
+        {
+            if (Bcri.Settings.allowDoubleTab) {
+                $('#wrapper').css('visibility', 'visible');
+                return;
+            }
+
+            var cookie = readCookie("DepositControl");
+            var d = new Date();
+            d.setTime(d.getTime() + (1 * 12 * 60 * 60 * 1000));
+            if (cookie === '') {
+				createCookie("DepositControl", "0", d);
+				cookie = readCookie("DepositControl");
+                sessionStorage.setItem('DepositControl.cookieInstanceValid', 0);
+            }
+			var cookieInstance = parseInt(cookie);
+            var instanceValid = sessionStorage.getItem('DepositControl.cookieInstanceValid');
+            if (instanceValid == cookieInstance) {
+                $('#wrapper').css('visibility', 'visible');
+            } else {
+                createCookie("DepositControl", String(++cookieInstance), d);
+                window.location = baseUrl + "Out/TabDuplicate";
+            }
+        });
+
+        $(window).bind("beforeunload", function () {
+            if (Bcri.Settings.allowDoubleTab) {
+                return;
+            }
+            try {
+                var cookie = readCookie("DepositControl");
+                if (cookie !== '') {
+					var cookieInstance = parseInt(cookie);
+                    if (cookieInstance > 0) {
+                        var d = new Date();
+                        d.setTime(d.getTime() + (1 * 24 * 60 * 60 * 1000));
+                        createCookie("DepositControl", String(--cookieInstance), d);
+                    } else {
+                        var d = new Date();
+                        d.setTime(d.getTime() + (60 * 60 * 1000));
+                        createCookie("DepositControl", String(0), d);
+                    }
+                }
+            } catch (e) { }
+        });
+</script>

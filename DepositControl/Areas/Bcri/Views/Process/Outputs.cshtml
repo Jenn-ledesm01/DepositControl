@@ -1,0 +1,51 @@
+@using Bcri.Core.Bussines
+@using DepositControl.Areas.Bcri.Models
+@using DNF.Security.Bussines
+@model List<ProcessOutput>
+
+<div class="panel-body col-lg-12">
+
+    <div class="row">
+        <div class="col-md-6">
+            <select id="selRepositoryOutput" class="form-control" style="width: 100%">
+                @foreach (ProcessOutput output in Model.Where(x => x.Config.Visibility.Code != "Hide" || Current.User.HasAccess("Developer")))
+                {
+                    <option value="@output.Config.Code-output-@output.Repository.Id" grid-attach="@output.Config.Code-output-@output.Repository.Id">
+                        @output.Config.Name (@output.Repository.Period.ToShortDateString()) @(Current.User.HasAccess("Developer") ? $"({output.Repository.Id})" : "" )
+                    </option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <div id="contentOutputGrid" class="tab-content">
+                @foreach (ProcessOutput output in Model.Where(x => x.Config.Visibility.Code != "Hide" || Current.User.HasAccess("Developer")))
+                {
+                    <div class="panel-body tab-pane fade @(Model.IndexOf(output) == 0 ? "in active" : "")" id="@output.Config.Code-output-@output.Repository.Id">
+                        @*<h3>@output.Config.Name</h3>*@
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                @Html.Partial("JqGridBcri", new GridModel
+                                   {
+                                       EntityName = output.Config.RepositoryConfig.Code,
+                                       GridId = output.Config.Code + output.Repository.Id,
+                                       RepositoryId = output.Repository.Id,
+                                       RepositoryConfigId = output.Config.RepositoryConfig.Id,
+                                       Editable = false,
+                                       Exportable = true,
+                                       ServerSide = false
+                                   })                                
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

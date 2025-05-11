@@ -1,0 +1,45 @@
+@model Bcri.Core.Bussines.SpProcess
+
+
+@{
+	var Res = DepositControl.Res.res;
+	Layout = "";
+}
+<form id="spProcessForm">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h5>@Res.storedProcedure</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <button type="submit" id="spRefresh" title=@Res.storedProcedureRegenerateSP class="btn btn-default">@Res.ReGenerate</button>
+                </div>
+            </div>
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.ProcessConfig.Id)
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label>@Res.content</label>
+                        @Html.TextAreaFor(x => x.Content, new { @class = "form-control", style = "height:300px" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="spAlert"></div>
+                    <button type="submit" id="spApply" class="btn btn-default">@Res.applySP</button>
+                    <button type="submit" id="spSave" class="btn btn-default">@Res.save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

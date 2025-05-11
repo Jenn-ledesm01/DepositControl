@@ -1,0 +1,120 @@
+﻿@model DepositControl.Bussines.DeliveryNote
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Detalles del remito</title>
+</head>
+<body>
+    @if (ViewBag.Alert != null)
+    {
+    <div class="alert alert-dismissable alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>Error!</strong> @ViewBag.Alert
+    </div>
+    }
+<div class="form-horizontal">
+    <h1><b>Detalles del remito</b></h1>
+    <hr />
+
+    <div class="form-group">
+        <label class="col-sm-1">Fecha</label>
+        <div class="col-sm-offset-2">
+            @Model.Date.ToString("dd/MM/yyyy")
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1">Número</label>
+        <div class="col-sm-offset-2">
+            @Html.DisplayFor(model => model.Number)
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1">Realizado por</label>
+        <div class="col-sm-offset-2">
+            @Html.DisplayFor(model => model.WarehouseManager.User.FullName)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-1">Estado</label>
+        <div class="col-sm-offset-2">
+            @Html.DisplayFor(model => model.StateDeliveryNote.Name)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-1">Archivo</label>
+        <div class="col-sm-offset-2">
+            @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
+            {
+                <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank">
+                    Ver PDF
+                </a>
+            }
+            else
+            {
+                <span>Ningún archivo seleccionado</span>
+            }
+        </div>
+    </div>
+</div>
+
+    <br />
+    <h3>Detalles del remito</h3>
+    @if (Model.DeliveryNoteDetails != null && Model.DeliveryNoteDetails.Any())
+    {
+        <table class="table table-bordered table-hover" style="background-color:white;">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detail in Model.DeliveryNoteDetails)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => detail.Product.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => detail.Quantity)</td>
+                        <td>@Html.DisplayFor(modelItem => detail.Product.Price)</td>
+                        <td>@(detail.Quantity * detail.Product.Price)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div style="text-align: right; margin-top: 10px;">
+            <strong>Total: @Html.DisplayFor(model => model.TotalAmount)</strong>
+        </div>
+    }
+    else
+    {
+        <p>Sin detalles del remito.</p>
+    }
+
+    <div>
+        @if (Request.UrlReferrer != null)
+        {
+            <a href="@Request.UrlReferrer">Volver a la Grilla</a>
+        }
+        else
+        {
+            @Html.ActionLink("Volver a la Grilla", "Index", "DeliveryNote")
+        }
+    </div>
+
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Alert
+        </div>
+    }
+</body>
+</html>

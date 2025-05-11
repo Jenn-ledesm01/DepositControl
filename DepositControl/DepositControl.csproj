@@ -1,0 +1,2689 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{060C34BF-EB7F-4DAF-A0CB-18DCE3255BB7}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DepositControl</RootNamespace>
+    <AssemblyName>DepositControl</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44368</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bcri.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bcri.Web.2.1.0.154\lib\Bcri.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.5.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.11.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.11.0\lib\net20\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="Elasticsearch.Net, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.1.8.0\lib\net45\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Expando, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bcri.Web.2.1.0.154\lib\Expando.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentMigrator.Runner, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.Runner.1.6.2\lib\40\FluentMigrator.Runner.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.AWT.WinForms, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.AWT.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.ByteCode, Version=9.3.4.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.ByteCode.9.3.4\lib\net472\IKVM.ByteCode.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Beans, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Beans.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Charsets, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Charsets.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Corba, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Corba.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Core, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Jdbc, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Jdbc.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Management, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Media, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Media.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Misc, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Misc.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Naming, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Naming.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Remoting, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Remoting.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Security, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.SwingAWT, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.SwingAWT.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Text, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Tools, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.Util, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.API, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.API.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Bind, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.Bind.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Crypto, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Parse, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.Parse.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.Transform, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.Transform.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.WebServices, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.WebServices.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.OpenJDK.XML.XPath, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.OpenJDK.XML.XPath.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Runtime, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="IKVM.Runtime.JNI, Version=7.4.5196.0, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
+      <HintPath>..\packages\IKVM.7.4.5196.0\lib\IKVM.Runtime.JNI.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.2\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    </Reference>
+    <Reference Include="Nest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEST.1.8.0\lib\net45\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bcri.Web.2.1.0.154\lib\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bcri.Web.2.1.0.154\lib\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bcri.Web.2.1.0.154\lib\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bcri.Web.2.1.0.154\lib\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.10.1.766, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.10.1\lib\net40-Client\NuGet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.8.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.2\lib\net462\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Metadata, Version=8.0.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.8.0.1\lib\net462\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.1\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=8.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.8.0.5\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.2\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Bcri\BcriAreaRegistration.cs" />
+    <Compile Include="Areas\Bcri\BcriConfig.cs" />
+    <Compile Include="Areas\Bcri\Controllers\BcpImportController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\CommentsController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ConfigController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\DiagramController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\DocumentationController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\DocumentSearchController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\DynamicRenderController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\EntityController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\GridController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\GridCustomViewController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\HolidayController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\LanguageController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\LogController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\OutController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ParametricInputConfigController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\PivotTableController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ProcessController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ProcessInputConfigController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ProcessOutputConfigController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ReportController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\RepositoryController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ResourcesController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\ScriptsController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\SecurityController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\SimulationController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\SpProcessController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\StylesController.cs" />
+    <Compile Include="Areas\Bcri\Controllers\WizardController.cs" />
+    <Compile Include="Areas\Bcri\FilterAttribute\AccessCode.cs" />
+    <Compile Include="Areas\Bcri\FilterAttribute\Authenticated.cs" />
+    <Compile Include="Areas\Bcri\FilterAttribute\FileDownload.cs" />
+    <Compile Include="Areas\Bcri\FilterAttribute\ProcessAccessCode.cs" />
+    <Compile Include="Areas\Bcri\Models\GeneratePass.cs" />
+    <Compile Include="Areas\Bcri\Models\GridModel.cs" />
+    <Compile Include="Areas\Bcri\Models\IdentityModels.cs" />
+    <Compile Include="Areas\Bcri\Models\JqGrid.cs" />
+    <Compile Include="Areas\Bcri\Models\JqGridColModel.cs" />
+    <Compile Include="Areas\Bcri\Models\JsonQueryPivot.cs" />
+    <Compile Include="Areas\Bcri\Models\LogActionDetailModel.cs" />
+    <Compile Include="Areas\Bcri\Models\VDetailAccion.cs" />
+    <Compile Include="Areas\Bcri\Models\WizardProcess.cs" />
+    <Compile Include="Areas\Bcri\Res\Res.cs" />
+    <Compile Include="Areas\Bcri\Utility\CsvEntityReaderResult.cs" />
+    <Compile Include="Areas\Bcri\Utility\CsvReaderResult.cs" />
+    <Compile Include="Areas\Bcri\Utility\ExcelUtility.cs" />
+    <Compile Include="Areas\Bcri\Utility\Extended.cs" />
+    <Compile Include="Areas\Bcri\Utility\JqGridExtended.cs" />
+    <Compile Include="Areas\Bcri\Utility\jsonNetResult.cs" />
+    <Compile Include="Areas\Bcri\Utility\JsonReaderResult.cs" />
+    <Compile Include="Areas\Bcri\Utility\ModelBinding.cs" />
+    <Compile Include="Areas\Bcri\Utility\MvcExtensions.cs" />
+    <Compile Include="Areas\Bcri\Utility\PDFUtility.cs" />
+    <Compile Include="Areas\Bcri\Utility\ProcessExportResult.cs" />
+    <Compile Include="Areas\Bcri\Utility\ProcessUtility.cs" />
+    <Compile Include="Areas\Bcri\Utility\SecurityUtility.cs" />
+    <Compile Include="Areas\Bcri\Utility\SettingSiteUtility.cs" />
+    <Compile Include="Areas\Bcri\Utility\XlsEntityReaderResult.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\StateWarehouseManagerController.cs" />
+    <Compile Include="Controllers\WarehouseManagerController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\01_CreateSchema.cs" />
+    <Compile Include="Migrations\02_CreateFunctions.cs" />
+    <Compile Include="Migrations\03_CreateProcedures.cs" />
+    <Compile Include="Migrations\04_CreateData.cs" />
+    <Compile Include="Migrations\05_CreateMultilanguage.cs" />
+    <Compile Include="Migrations\06_CreateSimulation.cs" />
+    <Compile Include="Migrations\07_CreateUserSessionId.cs" />
+    <Compile Include="Migrations\08_AddTokenColums.cs" />
+    <Compile Include="Migrations\09_AccessManagement.cs" />
+    <Compile Include="Migrations\10_AddEditableToStruct.cs" />
+    <Compile Include="Migrations\11_ProcessAccessDefaultWithRes.cs" />
+    <Compile Include="Migrations\12_StatusColor.cs" />
+    <Compile Include="Migrations\13_RepositoryByPeriods.cs" />
+    <Compile Include="Migrations\14_CustomPeriodicity.cs" />
+    <Compile Include="Controllers\DeliveryNoteController.cs" />
+    <Compile Include="Controllers\DeliveryNoteDetailController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\PurchaseOrderDetailController.cs" />
+    <Compile Include="Controllers\SalePointController.cs" />
+    <Compile Include="Controllers\StateDeliveryNoteController.cs" />
+    <Compile Include="Controllers\StateProductController.cs" />
+    <Compile Include="Controllers\StatePurchaseOrderController.cs" />
+    <Compile Include="Controllers\StockController.cs" />
+    <Compile Include="Controllers\StockMovementController.cs" />
+    <Compile Include="Models\DeliveryNote.cs" />
+    <Compile Include="Models\DeliveryNoteDetail.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\PurchaseOrder.cs" />
+    <Compile Include="Models\PurchaseOrderDetail.cs" />
+    <Compile Include="Models\SalePoint.cs" />
+    <Compile Include="Models\StateDeliveryNote.cs" />
+    <Compile Include="Models\StateProduct.cs" />
+    <Compile Include="Models\StatePurchaseOrder.cs" />
+    <Compile Include="Models\StateWarehouseManager.cs" />
+    <Compile Include="Models\Stock.cs" />
+    <Compile Include="Models\StockMovement.cs" />
+    <Compile Include="Models\StockMovementDTO.cs" />
+    <Compile Include="Models\WarehouseManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Bcri\Views\BcpImport\Index.js" />
+    <Content Include="Areas\Bcri\Views\Config\Index.js" />
+    <Content Include="Areas\Bcri\Views\Config\ProcessUnit.js" />
+    <Content Include="Areas\Bcri\Views\DocumentSearch\AddFile.js" />
+    <Content Include="Areas\Bcri\Views\Entity\EntityData.js" />
+    <Content Include="Areas\Bcri\Views\Entity\Index.js" />
+    <Content Include="Areas\Bcri\Views\Holiday\Holiday.js" />
+    <Content Include="Areas\Bcri\Views\ParametricInputConfig\Index.js" />
+    <Content Include="Areas\Bcri\Views\PivotTable\Index.js" />
+    <Content Include="Areas\Bcri\Views\ProcessInputConfig\Index.js" />
+    <Content Include="Areas\Bcri\Views\ProcessOutputConfig\Index.js" />
+    <Content Include="Areas\Bcri\Views\Process\Index.js" />
+    <Content Include="Areas\Bcri\Views\Process\ProcessDetail.js" />
+    <Content Include="Areas\Bcri\Views\Process\Processes.js" />
+    <Content Include="Areas\Bcri\Views\Repository\Edit.js" />
+    <Content Include="Areas\Bcri\Views\Repository\Index.js" />
+    <Content Include="Areas\Bcri\Views\Security\AccessManagement.js" />
+    <Content Include="Areas\Bcri\Views\Security\Audit.js" />
+    <Content Include="Areas\Bcri\Views\Security\Events.js" />
+    <Content Include="Areas\Bcri\Views\Security\ProfileAudit.js" />
+    <Content Include="Areas\Bcri\Views\Security\Profiles.js" />
+    <Content Include="Areas\Bcri\Views\Security\Users.js" />
+    <Content Include="Areas\Bcri\Views\Simulation\Index.js" />
+    <Content Include="Areas\Bcri\Views\SpProcess\Index.js" />
+    <Content Include="Content\animate.css" />
+    <Content Include="Content\bcri.css" />
+    <Content Include="Content\bootstrap-datetimepicker.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
+    <Content Include="Content\bootstrap-dialog.css" />
+    <Content Include="Content\bootstrap-multiselect.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-treeview.css" />
+    <Content Include="Content\bootstrap-treeview.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\jquery-ui-timepicker-addon.css" />
+    <Content Include="Content\css\jquery-ui.css" />
+    <Content Include="Content\css\select2.css" />
+    <Content Include="Content\css\select2.min.css" />
+    <Content Include="Content\css\ui.multiselect.css" />
+    <Content Include="Content\dx.android5.light.css" />
+    <Content Include="Content\dx.common.css" />
+    <Content Include="Content\dx.contrast.compact.css" />
+    <Content Include="Content\dx.contrast.css" />
+    <Content Include="Content\dx.dark.compact.css" />
+    <Content Include="Content\dx.dark.css" />
+    <Content Include="Content\dx.ios7.default.css" />
+    <Content Include="Content\dx.light.compact.css" />
+    <Content Include="Content\dx.light.css" />
+    <Content Include="Content\dx.spa.css" />
+    <Content Include="Content\dx.win10.black.css" />
+    <Content Include="Content\dx.win10.white.css" />
+    <Content Include="Content\dx.win8.black.css" />
+    <Content Include="Content\dx.win8.white.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\images\duplicatedSession.png" />
+    <Content Include="Content\images\logo pie BCRI.svg" />
+    <Content Include="Content\images\logo principal BCRI.svg" />
+    <Content Include="Content\images\logo-abs.png" />
+    <Content Include="Content\images\logo-bcri-core.jpg" />
+    <Content Include="Content\images\logo-bcri-core.svg" />
+    <Content Include="Content\images\Logo-Superior.png" />
+    <Content Include="Content\images\Logo.svg" />
+    <Content Include="Content\images\plus-icon.png" />
+    <Content Include="Content\images\sbarrows.png" />
+    <Content Include="Content\jqgrid.ui.css" />
+    <Content Include="Content\jquery.ui.css" />
+    <Content Include="Content\jstree-theme\30px.png" />
+    <Content Include="Content\jstree-theme\32px.png" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-bold-webfont.svg" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-extralight-webfont.svg" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-regular-webfont.svg" />
+    <Content Include="Content\jstree-theme\style.css" />
+    <Content Include="Content\jstree-theme\style.min.css" />
+    <Content Include="Content\jstree-theme\throbber.gif" />
+    <Content Include="Content\layouts\Desktop\DesktopLayout.css" />
+    <Content Include="Content\layouts\Desktop\DesktopLayout.html" />
+    <Content Include="Content\layouts\Desktop\DesktopLayout.js" />
+    <Content Include="Content\layouts\Empty\EmptyLayout.css" />
+    <Content Include="Content\layouts\Empty\EmptyLayout.html" />
+    <Content Include="Content\layouts\Empty\EmptyLayout.js" />
+    <Content Include="Content\layouts\Popup\PopupLayout.css" />
+    <Content Include="Content\layouts\Popup\PopupLayout.html" />
+    <Content Include="Content\layouts\Popup\PopupLayout.js" />
+    <Content Include="Content\metisMenu.css" />
+    <Content Include="Content\metisMenu.min.css" />
+    <Content Include="Content\patterns\1.png" />
+    <Content Include="Content\patterns\2.png" />
+    <Content Include="Content\patterns\3.png" />
+    <Content Include="Content\patterns\4.png" />
+    <Content Include="Content\patterns\5.png" />
+    <Content Include="Content\patterns\6.png" />
+    <Content Include="Content\patterns\7.png" />
+    <Content Include="Content\patterns\congruent_pentagon.png" />
+    <Content Include="Content\patterns\header-profile-skin-1.png" />
+    <Content Include="Content\patterns\header-profile-skin-2.png" />
+    <Content Include="Content\patterns\header-profile-skin-3.png" />
+    <Content Include="Content\patterns\header-profile.png" />
+    <Content Include="Content\patterns\otis_redding.png" />
+    <Content Include="Content\patterns\shattered.png" />
+    <Content Include="Content\patterns\triangular.png" />
+    <Content Include="Content\pivot.css" />
+    <Content Include="Content\pivot.min.css" />
+    <Content Include="Content\pivotTable.css" />
+    <Content Include="Content\sounds\alerta.mp3" />
+    <Content Include="Content\style-overrides.css" />
+    <Content Include="Content\TemplateBCRI.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\bootstrap-dialog.less" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="Migrations\AddEditableToStruct.sql" />
+    <Content Include="Migrations\AddTokenColums.sql" />
+    <Content Include="Migrations\CreateAccessManagement.Sql" />
+    <Content Include="Migrations\CreateData.sql" />
+    <Content Include="Migrations\CreateFunctions.sql" />
+    <Content Include="Migrations\CreateMultilanguage.sql" />
+    <Content Include="Migrations\CreateProcedures.sql" />
+    <Content Include="Migrations\CreateSchema.sql" />
+    <Content Include="Migrations\CreateSimulation.sql" />
+    <Content Include="Migrations\CreateUserSessionId.Sql" />
+    <Content Include="Migrations\CustomPeriodicity.sql" />
+    <Content Include="Migrations\ProcessAccessDefaultWithRes.Sql" />
+    <Content Include="Migrations\RepositoryByPeriods.sql" />
+    <Content Include="Migrations\StatusColor.sql" />
+    <Content Include="Scripts\bcri\Comments.js" />
+    <Content Include="Scripts\bcri\GridCustomView.js" />
+    <Content Include="Scripts\bcri\JqGridBcri.js" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap-treeview.js" />
+    <Content Include="Scripts\bootstrap-treeview.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\cldr-data\.gitattributes" />
+    <Content Include="Scripts\cldr-data\.gitignore" />
+    <Content Include="Scripts\cldr-data\index.js" />
+    <Content Include="Scripts\cldr-data\install.js" />
+    <Content Include="Scripts\cldr-data\urls.json" />
+    <Content Include="Scripts\cldr-data\supplemental\windowsZones.json" />
+    <Content Include="Scripts\cldr-data\supplemental\weekData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\unitPreferenceData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\timeData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\territoryInfo.json" />
+    <Content Include="Scripts\cldr-data\supplemental\territoryContainment.json" />
+    <Content Include="Scripts\cldr-data\supplemental\references.json" />
+    <Content Include="Scripts\cldr-data\supplemental\primaryZones.json" />
+    <Content Include="Scripts\cldr-data\supplemental\plurals.json" />
+    <Content Include="Scripts\cldr-data\supplemental\parentLocales.json" />
+    <Content Include="Scripts\cldr-data\supplemental\ordinals.json" />
+    <Content Include="Scripts\cldr-data\supplemental\numberingSystems.json" />
+    <Content Include="Scripts\cldr-data\supplemental\metaZones.json" />
+    <Content Include="Scripts\cldr-data\supplemental\measurementData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\likelySubtags.json" />
+    <Content Include="Scripts\cldr-data\supplemental\languageMatching.json" />
+    <Content Include="Scripts\cldr-data\supplemental\languageGroups.json" />
+    <Content Include="Scripts\cldr-data\supplemental\languageData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\gender.json" />
+    <Content Include="Scripts\cldr-data\supplemental\dayPeriods.json" />
+    <Content Include="Scripts\cldr-data\supplemental\currencyData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\codeMappings.json" />
+    <Content Include="Scripts\cldr-data\supplemental\characterFallbacks.json" />
+    <Content Include="Scripts\cldr-data\supplemental\calendarPreferenceData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\calendarData.json" />
+    <Content Include="Scripts\cldr-data\supplemental\aliases.json" />
+    <Content Include="Scripts\cldr-data\state.json" />
+    <Content Include="Scripts\cldr-data\segments\root\suppressions.json" />
+    <Content Include="Scripts\cldr-data\segments\pt\suppressions.json" />
+    <Content Include="Scripts\cldr-data\segments\it\suppressions.json" />
+    <Content Include="Scripts\cldr-data\segments\fr\suppressions.json" />
+    <Content Include="Scripts\cldr-data\segments\es\suppressions.json" />
+    <Content Include="Scripts\cldr-data\segments\en\suppressions.json" />
+    <Content Include="Scripts\cldr-data\segments\de\suppressions.json" />
+    <Content Include="Scripts\cldr-data\scriptMetadata.json" />
+    <Content Include="Scripts\cldr-data\README.md" />
+    <Content Include="Scripts\cldr-data\package.json" />
+    <Content Include="Scripts\cldr-data\main\root\variants.json" />
+    <Content Include="Scripts\cldr-data\main\root\units.json" />
+    <Content Include="Scripts\cldr-data\main\root\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\root\territories.json" />
+    <Content Include="Scripts\cldr-data\main\root\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\root\posix.json" />
+    <Content Include="Scripts\cldr-data\main\root\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\root\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\root\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\root\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\root\layout.json" />
+    <Content Include="Scripts\cldr-data\main\root\languages.json" />
+    <Content Include="Scripts\cldr-data\main\root\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\root\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\root\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\root\characters.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\root\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-TL\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-ST\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-PT\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MZ\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-MO\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-LU\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GW\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-GQ\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CV\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-CH\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\variants.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\units.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\territories.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\posix.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\layout.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\languages.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\characters.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\pt-AO\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\it\variants.json" />
+    <Content Include="Scripts\cldr-data\main\it\units.json" />
+    <Content Include="Scripts\cldr-data\main\it\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\it\territories.json" />
+    <Content Include="Scripts\cldr-data\main\it\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\it\posix.json" />
+    <Content Include="Scripts\cldr-data\main\it\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\it\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\it\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\it\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\it\layout.json" />
+    <Content Include="Scripts\cldr-data\main\it\languages.json" />
+    <Content Include="Scripts\cldr-data\main\it\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\it\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\it\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\it\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\it\characters.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\it\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\fr\variants.json" />
+    <Content Include="Scripts\cldr-data\main\fr\units.json" />
+    <Content Include="Scripts\cldr-data\main\fr\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\fr\territories.json" />
+    <Content Include="Scripts\cldr-data\main\fr\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\fr\posix.json" />
+    <Content Include="Scripts\cldr-data\main\fr\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\fr\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\fr\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\fr\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\fr\layout.json" />
+    <Content Include="Scripts\cldr-data\main\fr\languages.json" />
+    <Content Include="Scripts\cldr-data\main\fr\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\fr\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\fr\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\fr\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\fr\characters.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\fr\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es\units.json" />
+    <Content Include="Scripts\cldr-data\main\es\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-VE\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-UY\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-US\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-SV\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PY\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PR\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PH\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PE\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-PA\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-NI\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-MX\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-IC\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-HN\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-GT\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-GQ\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-EC\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-EA\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-DO\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CU\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CR\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CO\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-CL\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-BZ\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-BR\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-BO\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-AR\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\variants.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\units.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\territories.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\posix.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\layout.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\languages.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\characters.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\es-419\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\en\variants.json" />
+    <Content Include="Scripts\cldr-data\main\en\units.json" />
+    <Content Include="Scripts\cldr-data\main\en\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\en\territories.json" />
+    <Content Include="Scripts\cldr-data\main\en\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\en\posix.json" />
+    <Content Include="Scripts\cldr-data\main\en\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\en\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\en\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\en\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\en\layout.json" />
+    <Content Include="Scripts\cldr-data\main\en\languages.json" />
+    <Content Include="Scripts\cldr-data\main\en\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\en\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\en\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\en\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\en\characters.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\en\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\variants.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\units.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\territories.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\posix.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\layout.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\languages.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\characters.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\en-US\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\de\variants.json" />
+    <Content Include="Scripts\cldr-data\main\de\units.json" />
+    <Content Include="Scripts\cldr-data\main\de\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\de\territories.json" />
+    <Content Include="Scripts\cldr-data\main\de\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\de\posix.json" />
+    <Content Include="Scripts\cldr-data\main\de\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\de\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\de\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\de\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\de\layout.json" />
+    <Content Include="Scripts\cldr-data\main\de\languages.json" />
+    <Content Include="Scripts\cldr-data\main\de\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\de\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\de\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\de\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\de\characters.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\de\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\main\ca\variants.json" />
+    <Content Include="Scripts\cldr-data\main\ca\units.json" />
+    <Content Include="Scripts\cldr-data\main\ca\timeZoneNames.json" />
+    <Content Include="Scripts\cldr-data\main\ca\territories.json" />
+    <Content Include="Scripts\cldr-data\main\ca\scripts.json" />
+    <Content Include="Scripts\cldr-data\main\ca\posix.json" />
+    <Content Include="Scripts\cldr-data\main\ca\numbers.json" />
+    <Content Include="Scripts\cldr-data\main\ca\measurementSystemNames.json" />
+    <Content Include="Scripts\cldr-data\main\ca\localeDisplayNames.json" />
+    <Content Include="Scripts\cldr-data\main\ca\listPatterns.json" />
+    <Content Include="Scripts\cldr-data\main\ca\layout.json" />
+    <Content Include="Scripts\cldr-data\main\ca\languages.json" />
+    <Content Include="Scripts\cldr-data\main\ca\delimiters.json" />
+    <Content Include="Scripts\cldr-data\main\ca\dateFields.json" />
+    <Content Include="Scripts\cldr-data\main\ca\currencies.json" />
+    <Content Include="Scripts\cldr-data\main\ca\contextTransforms.json" />
+    <Content Include="Scripts\cldr-data\main\ca\characters.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-roc.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-persian.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-japanese.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-islamic.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-islamic-umalqura.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-islamic-tbla.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-islamic-rgsa.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-islamic-civil.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-indian.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-hebrew.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-gregorian.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-generic.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-ethiopic.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-ethiopic-amete-alem.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-dangi.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-coptic.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-chinese.json" />
+    <Content Include="Scripts\cldr-data\main\ca\ca-buddhist.json" />
+    <Content Include="Scripts\cldr-data\defaultContent.json" />
+    <Content Include="Scripts\cldr-data\DCO.md" />
+    <Content Include="Scripts\cldr-data\availableLocales.json" />
+    <Content Include="Scripts\cldr-data\.ignored-package.json" />
+    <Content Include="Scripts\cldr-data\.ignored-bower.json" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-regular-webfont.woff" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-regular-webfont.ttf" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-regular-webfont.eot" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-extralight-webfont.woff" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-extralight-webfont.ttf" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-extralight-webfont.eot" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-bold-webfont.woff" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-bold-webfont.ttf" />
+    <Content Include="Content\jstree-theme\fonts\titillium\titilliumweb-bold-webfont.eot" />
+    <Content Include="Areas\Bcri\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Bcri\Views\Wizard\RepositoryConfig.cshtml" />
+    <Content Include="Areas\Bcri\Views\Wizard\ProcessConfig.cshtml" />
+    <Content Include="Areas\Bcri\Views\Wizard\OutputConfig.cshtml" />
+    <Content Include="Areas\Bcri\Views\Wizard\EntityStruct.cshtml" />
+    <Content Include="Areas\Bcri\Views\Wizard\BcpConfig.cshtml" />
+    <Content Include="Areas\Bcri\Views\web.config" />
+    <Content Include="Areas\Bcri\Views\SpProcess\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Simulation\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Shared\JqGridBcri.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\_ViewDetailAction.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\Users.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\Profiles.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\ProfileAudit.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\FilterAction.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\Events.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\Audit.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\AccessManagement.cshtml" />
+    <Content Include="Areas\Bcri\Views\Security\AccessData.cshtml" />
+    <Content Include="Areas\Bcri\Views\Scripts\dobleTabControl.js.cshtml" />
+    <Content Include="Areas\Bcri\Views\Scripts\close.js.cshtml" />
+    <Content Include="Areas\Bcri\Views\Scripts\bcri.js.cshtml" />
+    <Content Include="Areas\Bcri\Views\Repository\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Repository\Edit.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\Processes.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\ProcessDetail.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\Parametrics.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\Outputs.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\New.js.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\New.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\Inputs.cshtml" />
+    <Content Include="Areas\Bcri\Views\Process\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\ProcessOutputConfig\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\ProcessInputConfig\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\PivotTable\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\ParametricInputConfig\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\_LayoutOut.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\TabDuplicate.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\SessionExpired.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\SessionEnd.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\SessionDuplicate.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Out\AccessDenied.cshtml" />
+    <Content Include="Areas\Bcri\Views\Log\Index.js.cshtml" />
+    <Content Include="Areas\Bcri\Views\Log\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Login\ResetPassword.cshtml" />
+    <Content Include="Areas\Bcri\Views\Login\Login.cshtml" />
+    <Content Include="Areas\Bcri\Views\Login\GeneratePassword.cshtml" />
+    <Content Include="Areas\Bcri\Views\Login\ChangePassword.cshtml" />
+    <Content Include="Areas\Bcri\Views\Holiday\_GridHoliday.cshtml" />
+    <Content Include="Areas\Bcri\Views\Holiday\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Grid\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\GridCustomView\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\GridCustomView\ChooseProfiles.cshtml" />
+    <Content Include="Areas\Bcri\Views\Error\_LayoutError.cshtml" />
+    <Content Include="Areas\Bcri\Views\Error\Error500.cshtml" />
+    <Content Include="Areas\Bcri\Views\Error\Error404.cshtml" />
+    <Content Include="Areas\Bcri\Views\Entity\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Entity\EntityData.cshtml" />
+    <Content Include="Areas\Bcri\Views\DocumentSearch\SeeContract.cshtml" />
+    <Content Include="Areas\Bcri\Views\DocumentSearch\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\DocumentSearch\Contracts.cshtml" />
+    <Content Include="Areas\Bcri\Views\Documentation\Manual.cshtml" />
+    <Content Include="Areas\Bcri\Views\Config\ProcessUnit.cshtml" />
+    <Content Include="Areas\Bcri\Views\Config\Index.cshtml" />
+    <Content Include="Areas\Bcri\Views\Comments\List.cshtml" />
+    <Content Include="Areas\Bcri\Views\Comments\Comments.cshtml" />
+    <Content Include="Areas\Bcri\Views\BcpImport\Index.cshtml" />
+    <Content Include="Areas\Bcri\Diagram\Process.js.cshtml" />
+    <Content Include="Areas\Bcri\Diagram\Process.cshtml" />
+    <Content Include="Content\icons\dxiconsios.woff" />
+    <Content Include="Content\icons\dxiconsios.ttf" />
+    <Content Include="Content\icons\dxicons.woff" />
+    <Content Include="Content\icons\dxicons.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Scripts\jquery-2.2.4.intellisense.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\bootstrap-dialog.js" />
+    <Content Include="Scripts\cldr.js" />
+    <Content Include="Scripts\cldr\event.js" />
+    <Content Include="Scripts\cldr\supplemental.js" />
+    <Content Include="Scripts\cldr\unresolved.js" />
+    <Content Include="Scripts\d3.tip.v0.6.3.js" />
+    <Content Include="Scripts\d3.v3.min.js" />
+    <Content Include="Scripts\devextreme-localization\dx.messages.de.js" />
+    <Content Include="Scripts\devextreme-localization\dx.messages.en.js" />
+    <Content Include="Scripts\devextreme-localization\dx.messages.es.js" />
+    <Content Include="Scripts\devextreme-localization\dx.messages.ja.js" />
+    <Content Include="Scripts\devextreme-localization\dx.messages.ru.js" />
+    <Content Include="Scripts\devextreme-localization\dx.web.de.js" />
+    <Content Include="Scripts\devextreme-localization\dx.web.ja.js" />
+    <Content Include="Scripts\devextreme-localization\dx.web.ru.js" />
+    <Content Include="Scripts\devextreme-localization\dx.webappjs.es.js" />
+    <Content Include="Scripts\dropzone\basic.css" />
+    <Content Include="Scripts\dropzone\basic.min.css" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.js" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.min.js" />
+    <Content Include="Scripts\dropzone\dropzone.css" />
+    <Content Include="Scripts\dropzone\dropzone.js" />
+    <Content Include="Scripts\dropzone\dropzone.min.css" />
+    <Content Include="Scripts\dropzone\dropzone.min.js" />
+    <Content Include="Scripts\dx.aspnet.mvc.js" />
+    <Content Include="Scripts\dx.viz-web.debug.js" />
+    <Content Include="Scripts\dx.viz-web.js" />
+    <Content Include="Scripts\dx.viz.debug.js" />
+    <Content Include="Scripts\dx.viz.js" />
+    <Content Include="Scripts\dx.web.debug.js" />
+    <Content Include="Scripts\dx.web.js" />
+    <Content Include="Scripts\globalize.js" />
+    <Content Include="Scripts\globalize\currency.js" />
+    <Content Include="Scripts\globalize\date.js" />
+    <Content Include="Scripts\globalize\message.js" />
+    <Content Include="Scripts\globalize\number.js" />
+    <Content Include="Scripts\globalize\plural.js" />
+    <Content Include="Scripts\globalize\relative-time.js" />
+    <Content Include="Scripts\globalize\unit.js" />
+    <Content Include="Scripts\i18n\grid.locale-ar.js" />
+    <Content Include="Scripts\i18n\grid.locale-bg.js" />
+    <Content Include="Scripts\i18n\grid.locale-ca.js" />
+    <Content Include="Scripts\i18n\grid.locale-cn.js" />
+    <Content Include="Scripts\i18n\grid.locale-cs.js" />
+    <Content Include="Scripts\i18n\grid.locale-de.js" />
+    <Content Include="Scripts\i18n\grid.locale-dk.js" />
+    <Content Include="Scripts\i18n\grid.locale-el.js" />
+    <Content Include="Scripts\i18n\grid.locale-en.js" />
+    <Content Include="Scripts\i18n\grid.locale-es.js" />
+    <Content Include="Scripts\i18n\grid.locale-fa.js" />
+    <Content Include="Scripts\i18n\grid.locale-fi.js" />
+    <Content Include="Scripts\i18n\grid.locale-fr.js" />
+    <Content Include="Scripts\i18n\grid.locale-gl.js" />
+    <Content Include="Scripts\i18n\grid.locale-he.js" />
+    <Content Include="Scripts\i18n\grid.locale-hr.js" />
+    <Content Include="Scripts\i18n\grid.locale-hu.js" />
+    <Content Include="Scripts\i18n\grid.locale-id.js" />
+    <Content Include="Scripts\i18n\grid.locale-is.js" />
+    <Content Include="Scripts\i18n\grid.locale-it.js" />
+    <Content Include="Scripts\i18n\grid.locale-ja.js" />
+    <Content Include="Scripts\i18n\grid.locale-kr.js" />
+    <Content Include="Scripts\i18n\grid.locale-lt.js" />
+    <Content Include="Scripts\i18n\grid.locale-me.js" />
+    <Content Include="Scripts\i18n\grid.locale-nl.js" />
+    <Content Include="Scripts\i18n\grid.locale-no.js" />
+    <Content Include="Scripts\i18n\grid.locale-pl.js" />
+    <Content Include="Scripts\i18n\grid.locale-pt-br.js" />
+    <Content Include="Scripts\i18n\grid.locale-pt.js" />
+    <Content Include="Scripts\i18n\grid.locale-ro.js" />
+    <Content Include="Scripts\i18n\grid.locale-ru.js" />
+    <Content Include="Scripts\i18n\grid.locale-sk.js" />
+    <Content Include="Scripts\i18n\grid.locale-sq.js" />
+    <Content Include="Scripts\i18n\grid.locale-sr-latin.js" />
+    <Content Include="Scripts\i18n\grid.locale-sr.js" />
+    <Content Include="Scripts\i18n\grid.locale-sv.js" />
+    <Content Include="Scripts\i18n\grid.locale-th.js" />
+    <Content Include="Scripts\i18n\grid.locale-tr.js" />
+    <Content Include="Scripts\i18n\grid.locale-tw.js" />
+    <Content Include="Scripts\i18n\grid.locale-ua.js" />
+    <Content Include="Scripts\i18n\grid.locale-uk.js" />
+    <Content Include="Scripts\i18n\grid.locale-vi.js" />
+    <None Include="Scripts\jquery-2.2.4-vsdoc.js" />
+    <Content Include="Scripts\jquery-2.2.4.js" />
+    <Content Include="Scripts\jquery-2.2.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery-ui-i18n.js" />
+    <Content Include="Scripts\jquery-ui-i18n.min.js" />
+    <Content Include="Scripts\jquery-2.2.4.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.jqGrid.js" />
+    <Content Include="Scripts\jquery.multiselect.min.js" />
+    <Content Include="Scripts\jquery.slimscroll.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jstree\jstree.js" />
+    <Content Include="Scripts\jstree\jstree.min.js" />
+    <Content Include="Scripts\jstree\themes\default-dark\32px.png" />
+    <Content Include="Scripts\jstree\themes\default-dark\40px.png" />
+    <Content Include="Scripts\jstree\themes\default-dark\style.css" />
+    <Content Include="Scripts\jstree\themes\default-dark\style.min.css" />
+    <Content Include="Scripts\jstree\themes\default-dark\throbber.gif" />
+    <Content Include="Scripts\jstree\themes\default\32px.png" />
+    <Content Include="Scripts\jstree\themes\default\40px.png" />
+    <Content Include="Scripts\jstree\themes\default\style.css" />
+    <Content Include="Scripts\jstree\themes\default\style.min.css" />
+    <Content Include="Scripts\jstree\themes\default\throbber.gif" />
+    <Content Include="Scripts\jszip.js" />
+    <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\metisMenu.js" />
+    <Content Include="Scripts\metisMenu.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\pace.min.js" />
+    <Content Include="Scripts\pivottable\c3_renderers.js" />
+    <Content Include="Scripts\pivottable\c3_renderers.min.js" />
+    <Content Include="Scripts\pivottable\d3_renderers.js" />
+    <Content Include="Scripts\pivottable\d3_renderers.min.js" />
+    <Content Include="Scripts\pivottable\export_renderers.js" />
+    <Content Include="Scripts\pivottable\export_renderers.min.js" />
+    <Content Include="Scripts\pivottable\gchart_renderers.js" />
+    <Content Include="Scripts\pivottable\gchart_renderers.min.js" />
+    <Content Include="Scripts\pivottable\jsapi.js" />
+    <Content Include="Scripts\pivottable\pivot.es.js" />
+    <Content Include="Scripts\pivottable\pivot.es.min.js" />
+    <Content Include="Scripts\pivottable\pivot.js" />
+    <Content Include="Scripts\pivottable\pivot.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\select2.js" />
+    <Content Include="Scripts\template.js" />
+    <Content Include="Scripts\vectormap-data\africa.js" />
+    <Content Include="Scripts\vectormap-data\canada.js" />
+    <Content Include="Scripts\vectormap-data\eurasia.js" />
+    <Content Include="Scripts\vectormap-data\europe.js" />
+    <Content Include="Scripts\vectormap-data\usa.js" />
+    <Content Include="Scripts\vectormap-data\world.js" />
+    <Content Include="Scripts\vectormap-utils\dx.vectormaputils.debug.js" />
+    <Content Include="Scripts\vectormap-utils\dx.vectormaputils.js" />
+    <Content Include="Scripts\vectormap-utils\dx.vectormaputils.node.js" />
+    <Content Include="skin-config.html" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Shared\_LayoutDashboard.cshtml" />
+    <Content Include="Views\Shared\_LayoutBcri.cshtml" />
+    <Content Include="Views\Shared\Sidebar.cshtml" />
+    <Content Include="Views\Shared\RepositoryDataGrid.cshtml" />
+    <Content Include="Views\Shared\DefaultHeader.cshtml" />
+    <Content Include="Views\Shared\DefaultFooter.cshtml" />
+    <Content Include="Views\Shared\Access.cshtml" />
+    <Content Include="trace.axd" />
+    <Content Include="Scripts\pivottable\pivot.min.js.map" />
+    <Content Include="Scripts\pivottable\pivot.js.map" />
+    <Content Include="Scripts\pivottable\pivot.es.min.js.map" />
+    <Content Include="Scripts\pivottable\pivot.es.js.map" />
+    <Content Include="Scripts\pivottable\gchart_renderers.min.js.map" />
+    <Content Include="Scripts\pivottable\gchart_renderers.js.map" />
+    <Content Include="Scripts\pivottable\export_renderers.min.js.map" />
+    <Content Include="Scripts\pivottable\export_renderers.js.map" />
+    <Content Include="Scripts\pivottable\d3_renderers.min.js.map" />
+    <Content Include="Scripts\pivottable\d3_renderers.js.map" />
+    <Content Include="Scripts\pivottable\c3_renderers.min.js.map" />
+    <Content Include="Scripts\pivottable\c3_renderers.js.map" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
+    <Content Include="Views\StateProduct\Index.cshtml" />
+    <Content Include="Views\StateProduct\Create.cshtml" />
+    <Content Include="Views\StateProduct\Edit.cshtml" />
+    <Content Include="Views\StateProduct\Delete.cshtml" />
+    <Content Include="Views\StateDeliveryNote\Index.cshtml" />
+    <Content Include="Views\StateDeliveryNote\Create.cshtml" />
+    <Content Include="Views\StateDeliveryNote\Edit.cshtml" />
+    <Content Include="Views\StateDeliveryNote\Delete.cshtml" />
+    <Content Include="Views\StatePurchaseOrder\Create.cshtml" />
+    <Content Include="Views\StatePurchaseOrder\Index.cshtml" />
+    <Content Include="Views\StatePurchaseOrder\Delete.cshtml" />
+    <Content Include="Views\StatePurchaseOrder\Edit.cshtml" />
+    <Content Include="Views\SalePoint\Index.cshtml" />
+    <Content Include="Views\SalePoint\Create.cshtml" />
+    <Content Include="Views\SalePoint\Edit.cshtml" />
+    <Content Include="Views\SalePoint\Delete.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\Create.cshtml" />
+    <Content Include="Views\PurchaseOrder\Edit.cshtml" />
+    <Content Include="Views\PurchaseOrder\Delete.cshtml" />
+    <Content Include="Views\PurchaseOrder\Details.cshtml" />
+    <Content Include="Views\DeliveryNote\Create.cshtml" />
+    <Content Include="Views\DeliveryNote\Edit.cshtml" />
+    <Content Include="Views\DeliveryNote\Details.cshtml" />
+    <Content Include="Views\DeliveryNote\Delete.cshtml" />
+    <Content Include="Views\DeliveryNote\Index.cshtml" />
+    <Content Include="Views\StateWarehouseManager\Create.cshtml" />
+    <Content Include="Views\StateWarehouseManager\Delete.cshtml" />
+    <Content Include="Views\StateWarehouseManager\Edit.cshtml" />
+    <Content Include="Views\StateWarehouseManager\Index.cshtml" />
+    <Content Include="Views\WarehouseManager\Create.cshtml" />
+    <Content Include="Views\WarehouseManager\Edit.cshtml" />
+    <Content Include="Views\WarehouseManager\Delete.cshtml" />
+    <Content Include="Views\WarehouseManager\Index.cshtml" />
+    <Content Include="Views\StockMovement\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\DeliveryNoteDetail\" />
+    <Folder Include="Views\PurchaseOrderDetail\" />
+    <Folder Include="Views\StockMovementDTO\" />
+    <Folder Include="Views\Stock\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\typings\bootstrap-dialog\bootstrap-dialog.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51268</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44368/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
+  <Import Project="..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\packages\Microsoft.TypeScript.MSBuild.5.8.1\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

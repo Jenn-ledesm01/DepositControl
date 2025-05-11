@@ -1,0 +1,59 @@
+﻿@model DepositControl.Bussines.StateWarehouseManager
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Crear Estado de jefe de Depósito</title>
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @ViewBag.Alert
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "StateWarehouseManager", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h1><b>Crear Estado de jefe de Depósito</b></h1>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Nombre</label>
+                <div class="col-sm-4">
+                    @Html.TextBox("Name", null, new { @class = "form-control" })
+                    @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Crear" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Volver a la Grilla", "Index", "StateWarehouseManager")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</body>
+</html>

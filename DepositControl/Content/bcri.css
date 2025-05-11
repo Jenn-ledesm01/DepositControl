@@ -1,0 +1,240 @@
+﻿/**/
+#block-wrapper {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .75);
+    left: 0;
+    top: 0;
+    z-index: 9999;
+    text-align: center;
+    position: absolute;
+    padding-top: 20%;
+    display: none;
+}
+
+#block-wrapper > div {
+    width: 70px;
+    height: 70px;
+}
+
+/*jqgrid mas lidna*/
+
+.ui-jqgrid .ui-search-table .form-control {
+    height: max-content !important;
+}
+
+.ui-jqgrid .ui-search-table .clearsearchclass {
+    color: #555555;
+}
+
+.ui-jqgrid .ui-search-toolbar .ui-th-ltr {
+    padding: 2px !important
+}
+
+.ui-jqgrid .glyphicon-plus {
+    color: #5cb85c;
+}
+
+
+.ui-jqgrid .fa-file-excel-o {
+    color: #3f903f;
+    font-size: 16px;
+}
+
+
+.ui-jqgrid .glyphicon-edit {
+    color: #f0ad4e;
+}
+
+.ui-jqgrid .fa-group {
+    color: #f0ad4e;
+}
+
+.ui-jqgrid .glyphicon-trash {
+    color: #d9534f;
+}
+
+.ui-jqgrid .glyphicon-refresh {
+    color: #337ab7;
+}
+
+.ui-jqgrid .glyphicon-search {
+    color: grey;
+}
+
+.ui-jqgrid .active .glyphicon {
+    /*hover styles*/
+}
+
+/*Process*/
+.processActionGrid {
+}
+
+
+    .processActionGrid a {
+        display: inline-block;
+        margin: 0 18px 0 0;
+        font-size: 18px;
+        padding-top: 2px;
+        padding-left: 2px;
+        width: 22px;
+        height: 20px;
+        vertical-align: top;
+    }
+
+@keyframes popIcon {
+    from {
+        font-size: 18px;
+        padding-top: 2px;
+        padding-left: 2px;
+    }
+
+    to {
+        font-size: 22px;
+        padding-top: 0px;
+        padding-left: 0px;
+    }
+}
+
+.processActionGrid a:hover {
+    cursor: pointer;
+    font-size: 22px;
+    text-decoration: none;
+    padding-top: 0px;
+    padding-left: 0px;
+    animation-name: popIcon;
+    animation-timing-function: ease-out;
+    animation-duration: 150ms;
+}
+
+.processActionGrid a:disabled {
+    color: grey !important;
+    font-size: 18px;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+.processActionGrid a.Approve {
+    color: #5cb85c;
+}
+
+.processActionGrid a.Refuse {
+    color: #d9534f;
+}
+
+.processActionGrid a.Delete {
+    margin-left: 20px;
+    color: darkred;
+}
+
+    .processActionGrid a.Delete:hover {
+        color: red;
+    }
+
+.processActionGrid a.ReProcess {
+    color: #f0ad4e;
+}
+
+
+
+/*seguridad*/
+ul.checked-list-box li.list-group-item {
+    padding: 0px 15px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+label.checkbox {
+    font-weight: normal;
+    margin-left: 20px;
+}
+
+    label.checkbox input[type=checkbox] {
+        width: auto;
+    }
+
+div#Access.treeview.customelement {
+    max-height: 300px;
+}
+
+.searcher {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    background: inherit;
+}
+
+/*
+    Dropzone
+*/
+.upload-drop-zone {
+    height: 200px;
+    border-width: 2px;
+    margin-bottom: 20px;
+}
+
+.upload-drop-zone {
+    color: #ccc;
+    border-style: dashed;
+    border-color: #ccc;
+    line-height: 200px;
+    text-align: center
+}
+
+    .upload-drop-zone.drop {
+        color: #222;
+        border-color: #222;
+    }
+
+.dz-max-files-reached {
+    background-color: red;
+}
+
+process-select-header {
+    color: black;
+    font-size: 36px
+}
+
+
+/*select place holder*/
+.placeholder {
+    color: grey;
+}
+
+select option:first-child:disabled {
+    color: grey;
+    display: none;
+}
+
+select option {
+    color: #555;
+}
+
+
+
+.colorActive {
+    color: #3c763d;
+    background-color: #c9e2b4;
+    border-color: #d6e9c6;
+}
+
+.colorAgreementTrue {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #d6e9c6;
+}
+
+.colorAgreementFalse {
+    color: #daa520;
+    background-color: #F5F6CE;
+    border-color: #F5F6CE;
+}
+
+/*
+    Boostrap fixes
+*/
+.ui-datepicker {
+    z-index: 9999 !important;
+}

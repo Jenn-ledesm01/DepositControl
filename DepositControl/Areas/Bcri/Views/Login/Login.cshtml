@@ -1,0 +1,51 @@
+@model DNF.Security.Bussines.User
+@{var Res = DepositControl.Res.res;}
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<div>
+    <div>
+        <h1 class="logo-name">CS</h1>
+    </div>
+    <br />
+    <h3>@Res.welcomeSignIn</h3>
+    <br />
+    <!--
+    <p>Addiotional login message</p>
+    <p>Login in. To see it in action.</p>
+    -->
+    @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "m-t", role = "form" }))
+    {
+        <div class="form-group">
+            @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Email/Username" })
+        </div>
+        <div class="form-group">
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Password", @type = "password" })
+        </div>
+        <div class="checkbox">
+            <label>
+                <input name="remember" type="checkbox" value="Remember Me">@Res.rememberMe
+            </label>
+        </div>
+        if (ViewData["error"] != null)
+        {
+            @:<div class="alert alert-danger">
+                @ViewData["error"]
+            @:</div>
+        }
+        <button type="submit" class="btn btn-primary block full-width m-b">@Res.login</button>
+        @Html.ActionLink("Unable to access your account?", "ResetPassword", new { id = "0" }, new { @class = "btn btn-sm btn-white btn-block" })
+    }
+    <!-- <p class="m-t"> <small>Copyright � 2000</small> </p> -->
+</div>
+
+@section scripts{
+    <script>
+        $(function() {
+            $('#LoginForm').validate();
+        });
+    </script>
+}
+

@@ -1,0 +1,166 @@
+﻿@model IEnumerable<DepositControl.Bussines.StatePurchaseOrder>
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+    string accessNew = ViewBag.New.ToString().ToLower();
+    string accessDelete = ViewBag.Delete.ToString().ToLower();
+    string accessEdit = ViewBag.Edit.ToString().ToLower();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="~/Scripts/jquery-2.2.4.min.js"></script>
+    <title>Estados de Orden de Compra</title>
+</head>
+<style>
+    .form-group-inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+
+    .form-control {
+        width: 200px;
+    }
+</style>
+<body>
+    @if (TempData["Alert"] != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @TempData["Alert"]
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+            <strong>¡Éxito!</strong> @TempData["Success"]
+        </div>
+    }
+    <div>
+        <h1><b>Estados de Orden de Compra</b></h1>
+
+        @using (Html.BeginForm("Index", "StatePurchaseOrder", FormMethod.Post))
+        {
+            <div class="form-group-inline">
+                <div class="form-group">
+                    @Html.Label("Name", "Buscar por Nombre:")
+                    @Html.TextBox("Name", null, new { @class = "form-control textBox", @maxlength = "255", @size = "45" })
+                </div>
+                <input type="submit" name="submitButton" value="Buscar" class="btn btn-primary" />
+                <button type="submit" name="clear" value="true" class="btn btn-secondary" title="Limpiar filtro">
+                    <i class="fa fa-eraser"></i>
+                </button>
+            </div>
+            <br />
+            <div style="padding-top:10px; padding-bottom:10px; display: flex; justify-content: space-between; align-items: center;">
+                <h3>Grilla de Estados de Orden de Compra</h3>
+                <div style="text-align:right;">
+                    @if (accessNew == "true")
+                    {
+                        <a href="@Url.Action("Create", "StatePurchaseOrder")" class="btn-success btn-sm">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            Nuevo
+                        </a>
+                    }
+                </div>
+            </div>
+            <div>
+                <table class="table table-bordered table-hover" style="background-color:white;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">Nombre</th>
+                            <th style="text-align:left;">Código</th>
+                            <th style="text-align:left;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="text-align: left; width: 30%;">
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td style="text-align: left; width: 30%;">
+                                    @Html.DisplayFor(modelItem => item.Code)
+                                </td>
+                                @if (accessEdit == "true" || accessDelete == "true")
+                                {
+                                    <td style="text-align:center; width: 20%;">
+                                        <div style="display: flex; justify-content: center;">
+                                            @if (accessEdit == "true")
+                                            {
+                                                <a href="@Url.Action("Edit", "StatePurchaseOrder", new { id = item.Id })" title="Editar" style="margin: 0 8px;">
+                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="font-size: 15px;"></span>
+                                                </a>
+                                                <br />
+                                            }
+                                            @if (accessDelete == "true")
+                                            {
+                                                <a href="#" class="btn-delete" data-id="@item.Id" title="Eliminar" style="margin: 0 8px;">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true" style="font-size: 15px;"></span>
+                                                </a>
+                                            }
+                                        </div>
+                                    </td>
+                                }
+                                </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content" style="left: 10%;">
+                        <div class="modal-header" style="background-color:#f5f5f5;">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="font-size: 28px;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="deleteModalLabel">
+                                <span class="glyphicon glyphicon-question-sign" style="color:#31708f; font-size:15px; margin-right:8px;"></span>
+                                Eliminar estado órden de compra
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>
+                                ¿Está seguro que desea eliminar este registro?<br>
+                            </h4>
+                        </div>
+                        <div class="modal-footer" style="text-align: right;">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="btnConfirmDelete">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="deleteItemId" />
+        }
+    </div>
+</body>
+</html>
+<script>
+    $(function () {
+        $('.btn-delete').click(function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            $('#deleteItemId').val(id);
+            $('#deleteConfirmModal').modal('show');
+        });
+
+        $('#btnConfirmDelete').click(function () {
+            const id = $('#deleteItemId').val();
+            window.location.href = `/StatePurchaseOrder/Delete/${id}`;
+        });
+    });
+
+</script>

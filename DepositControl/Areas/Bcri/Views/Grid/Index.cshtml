@@ -1,0 +1,24 @@
+
+
+@using DepositControl.Areas.Bcri.Models
+@model DNF.Structure.Bussines.Entity
+
+<h2>
+	@Model.Description
+</h2>
+<div class="row">
+	<div class="col-lg-12">
+		@Html.Partial("JqGridBcri", new GridModel
+			{
+				EntityName = Model.Name,
+				RepositoryId = 0,
+				RepositoryConfigId = 0,
+				Editable = true,
+				Exportable = true,
+				ServerSide = false
+
+			})
+	</div>
+</div>
+
+

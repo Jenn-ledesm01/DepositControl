@@ -1,0 +1,47 @@
+@model Bcri.Core.Bussines.ProcessConfig
+@{var Res = DepositControl.Res.res;}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input id="chkBcp" type="checkbox" @(Model.InputConfigs.Any(x => x.Code == "BcpImport") ? "checked" : "") />@Res.bulkCopy</label>
+                <p class="help-block">@Res.helpBlockBulkCopy</p>
+            </div>
+        </div>
+
+        <div id="divBcp" class="row">
+            <div class="col-lg-12">
+                @{Html.RenderAction("index", "BcpImport", new { processConfigId = Model.Id });}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input id="chkSp" type="checkbox" @(Model.InputConfigs.Any(x => x.Code == "SpProcess") ? "checked" : "") />@Res.spProcess</label>
+                <p class="help-block">@Res.helpBlockSpProcess</p>
+            </div>
+        </div>
+        <div id="divSp" class="row">
+            <div class="col-lg-12">
+                @{Html.RenderAction("index", "SpProcess", new { processConfigId = Model.Id });}
+            </div>
+        </div>
+    </div>
+</div>
+@*
+    agregar sp
+    agregar clase
+*@
+
+
+@*<div class="form-group">
+    <div class="checkbox">
+        <label><input id="chkSP" type="checkbox"/> Store Procedure</label>
+        <p class="help-block">Process data via Store Procedure in local DB</p>
+    </div>
+</div>*@
+
+@section scripts {
+    @Scripts.Render("~/Areas/Bcri/Views/Config/ProcessUnit.js")
+}

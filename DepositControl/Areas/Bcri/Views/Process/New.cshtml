@@ -1,0 +1,43 @@
+
+@{var Res = DepositControl.Res.res;}
+@{
+    Layout = "";
+}
+<form id="NewProcess">
+    <div id="msgResult"></div>
+
+    <div id="PeriodSingle" class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label for="Period">@Res.period</label>
+                <input id="Period" name="Period" type="text" required="" title="@Res.mustenteradate" class="form-control datepicker" />
+                <span class="field-validation-valid" data-valmsg-for="Period" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+    </div>
+    <div id="PeriodMulti" class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="PeriodFrom">@Res.from</label>
+                <input id="PeriodFrom" name="PeriodFrom" type="text" title="@Res.mustenteradatefrom"   required="" class="form-control datepicker" />
+                <span class="field-validation-valid" data-valmsg-for="PeriodFrom" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label for="PeriodTo">@Res.to</label>
+                <input id="PeriodTo" name="PeriodTo" type="text" required="" title="@Res.mustenteradateto" class="form-control datepicker" />
+                <span class="field-validation-valid" data-valmsg-for="PeriodTo" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="refresh" name="refresh" value="true" /> @Res.RecreateExistingProcess
+                </label>
+            </div>
+        </div>
+    </div>
+
+</form>
+

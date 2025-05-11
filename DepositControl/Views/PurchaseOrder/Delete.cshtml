@@ -1,0 +1,28 @@
+﻿@model DepositControl.Bussines.PurchaseOrder
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Eliminar Órden de Compra</title>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h3>¿Está seguro que desea eliminar la Órden de compra con Id: @Model.Id?</h3>
+        <div>
+            @using (Html.BeginForm("Delete", "PurchaseOrder", new { id = Model.Id }, FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-actions no-color">
+                    <button type="button" class="btn btn-danger" id="btnShowDeleteModal">Eliminar</button>
+                    @Html.ActionLink("Volver a la Grilla", "Index", "PurchaseOrder")
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

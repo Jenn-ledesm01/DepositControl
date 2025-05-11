@@ -1,0 +1,184 @@
+@using DNF.Security.Bussines
+@{var Res = DepositControl.Res.res;}
+@{
+    ViewBag.Title = Res.profiles;
+}
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>Perfiles</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div id="buttonExport" style="text-align:right;">
+            <div class="menuRibbon-item">
+                <button type="button" class="btn btn-primary btn-lg" onclick="javascript: openCreateProfilePopup();" title="Crear Perfil">
+                    <i class="fa fa-user-plus"></i>
+                </button>
+            </div>
+            <div class="menuRibbon-item">
+                @if (ViewBag.HabilitadoBotonExportXls)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="javascript: CallBtnExportXls();" title="Descargar Excel">
+                        <i class="fa fa-file-excel-o"></i>
+                    </button>
+
+                }
+                @if (ViewBag.HabilitadoBotonExportPdf)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="javascript: CallBtnExportPdf();" title="Descargar PDF">
+                        <i class="fa fa-file-pdf-o"></i>
+
+                    </button>
+
+                }
+                @if (ViewBag.HabilitadoBotonExportTxt)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="javascript: CallBtnExportTxt();" title="Descargar TXT">
+                        <i class="fa fa-file-text-o"></i>
+
+                    </button>
+
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel-body">
+                <div class="col-lg-12">
+                    <table id="jqGridProfiles"> </table>
+                    <div id="jqGridProfilesPager"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Crear Perfil -->
+<div class="modal fade" id="createProfileModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="position:static;">
+            <div class="modal-header">
+                <h3 class="modal-title">Crear Nuevo Perfil</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="createProfileForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="ProfileName">Nombre</label>
+                        <input type="text" class="form-control" id="ProfileName" name="Name" maxlength="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ProfileState">Estado</label>
+                        <select class="form-control" id="ProfileState" name="State_Code" required>
+                            <option value="Enable">Habilitado</option>
+                            <option value="Disable">Deshabilitado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Accesos</label>
+                        <div id="accessTree"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                   <button type="button" class="btn btn-primary" onclick="submitCreateProfileForm()">Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="accessTree" @*style="display: none"*@></div> @*template for grid edit*@
+
+<div id="ProfilesJsData" @*common data para el js*@
+     data-dataurl="@Url.Action("ProfilesData")"
+     data-editurl="@Url.Action("ProfilesEdit")"
+     data-accesstreedataurl="@Url.Action("AccessTreeData")"
+     data-accessEdit="@Current.User.HasAccess("ProfileEdit").ToString().ToLower()"
+     data-accessNew="@Current.User.HasAccess("ProfileNew").ToString().ToLower()"
+     data-accessDelete="@Current.User.HasAccess("ProfileDelete").ToString().ToLower()">
+</div>
+<script type="text/javascript">
+    function CallBtnExportXls() {
+        var urlGrid = '@Url.Action("exportExcel", "Security")?tittle=' + "Perfiles" + "&fromDate=" + "" + "&toDate=" + "" + "&act01=" + "";
+        var sLink = urlGrid;
+        window.location.href = sLink;
+    }
+
+    function CallBtnExportPdf() {
+        var urlGrid = '@Url.Action("exportPDF", "Security")?tittle=' + "Perfiles" + "&fromDate=" + "" + "&toDate=" + "" + "&act01=" + "";
+        var sLink = urlGrid;
+        window.location.href = sLink;
+    }
+    function CallBtnExportTxt() {
+        var urlGrid = '@Url.Action("exportTXT", "Security")?tittle=' + "Perfiles" + "&fromDate=" + "" + "&toDate=" + "" + "&act01=" + "";
+        var sLink = urlGrid;
+        window.location.href = sLink;
+    }
+    function openCreateProfilePopup() {
+        $("#createProfileForm")[0].reset();
+
+        var Common = $("#ProfilesJsData").data();
+        $.ajax({
+            url: Common.accesstreedataurl,
+            method: "get",
+            dataType: "json",
+            success: function (treeData) {
+                $('#accessTree').treeview({
+                    data: treeData,
+                    showIcon: true,
+                    showCheckbox: true,
+                    levels: 2
+                });
+            }
+        });
+
+        $('#createProfileModal').modal('show');
+    }
+    function submitCreateProfileForm() {
+        var Common = $("#ProfilesJsData").data();
+        var name = $('#ProfileName').val().trim();
+        var state = $('#ProfileState').val();
+
+        var checkedNodes = $('#accessTree').treeview('getChecked');
+        var access = checkedNodes.map(function (n) { return n.Id; }).join(',');
+
+        if (!name) {
+            alert('El nombre es obligatorio');
+            return;
+        }
+        if (!access) {
+            alert('Debe seleccionar al menos un acceso');
+            return;
+        }
+
+        $.ajax({
+            url: Common.editurl,
+            method: "POST",
+            data: { Name: name, State_Code: state, Access: access },
+            success: function () {
+                $('#createProfileModal').modal('hide');
+                $("#jqGridProfiles").setGridParam({ datatype: 'json' }).trigger("reloadGrid");
+            },
+            error: function (xhr) {
+                alert("Error: " + (xhr.responseText || 'No se pudo crear el perfil.'));
+            },
+        });
+    }
+</script>
+@section styles{
+    @Styles.Render("~/Content/cssTreeview")
+
+}
+@section scripts {
+    @Scripts.Render("~/bundles/treeview")
+    @Scripts.Render("~/Areas/Bcri/Views/Security/Profiles.js")
+}
+
+

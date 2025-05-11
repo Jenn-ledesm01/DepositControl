@@ -1,0 +1,2 @@
+﻿insert into Type (Name, Code, TypeConfig_Id, [Order], [Description],IsDefault) values ('Custom', 'Custom', 4, 8, '', 0)
+insert into FrequencySimpleInput(Name, Frequency_Type_Id, FrequencyIncrease, FrequencyAll) values ('Custom', 50, 0, 0)

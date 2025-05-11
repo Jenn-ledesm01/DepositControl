@@ -1,0 +1,175 @@
+﻿@model IEnumerable<DepositControl.Bussines.StockMovementDTO>
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="~/Scripts/jquery-2.2.4.min.js"></script>
+    <title>Movimientos de Stock</title>
+</head>
+<style>
+    .form-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group-inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-control {
+        width: 200px;
+    }
+    .tipo-entrada {
+        color: green;
+        font-weight: bold;
+    }
+
+    .tipo-salida {
+        color: red;
+        font-weight: bold;
+    }
+    .tipo-movimiento {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+</style>
+<body>
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @ViewBag.Alert
+        </div>
+    }
+<div>
+    <h1><b>Movimientos de Stock</b></h1>
+    <br />
+    @using (Html.BeginForm("Index", "StockMovement", FormMethod.Post))
+    {
+        <div class="form-inline">
+            <div class="form-group-inline">
+                @Html.Label("Numero", "Número:")
+                @Html.TextBox("Numero", ViewBag.Numero as string, new { @class = "form-control", @maxlength = "50" })
+            </div>
+            <div class="form-group-inline">
+                @Html.Label("ProductName", "Producto:")
+                @Html.TextBox("ProductName", null, new { @class = "form-control textBox", @maxlength = "255", @size = "30" })
+            </div>
+            <div class="form-group-inline">
+                @Html.Label("TipoMovimiento", "Tipo Movimiento:")
+                @Html.DropDownList("TipoMovimiento", new SelectList(new List<SelectListItem>
+                {
+                    new SelectListItem{ Text = "Todos", Value = "" },
+                    new SelectListItem{ Text = "Orden de Compra", Value = "Orden de Compra" },
+                    new SelectListItem{ Text = "Remito", Value = "Remito" }
+                }, "Value", "Text", ViewBag.TipoMovimiento as string), new { @class = "form-control" })
+            </div>
+            <input type="submit" class="btn btn-primary" value="Buscar" />
+            <button type="submit" name="clear" value="true" class="btn btn-secondary" title="Limpiar filtro">
+                <i class="fa fa-eraser"></i>
+            </button>
+        </div>
+        <div style="padding-top:10px; padding-bottom:10px;">
+            <h3>Grilla de Movimientos</h3>
+        </div>
+        <div>
+            <table class="table table-bordered table-hover" style="background-color:white;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Fecha</th>
+                        <th style="text-align:left;">Tipo Movimiento</th>
+                        <th style="text-align:left;">Número</th>
+                        <th style="text-align:left;">Jefe de Depósito</th>
+                        <th style="text-align:left;">Producto</th>
+                        <th style="text-align:left;">Cantidad</th>
+                        <th style="text-align:left;">Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderByDescending(sm => sm.FechaMovimiento))
+                    {
+                        <tr>
+                            <td style="text-align:left; width:10%;">
+                                @item.FechaMovimiento.ToString("dd/MM/yyyy")
+                            </td>
+                            <td style="text-align:left; width:20%;">
+                                @{
+                                    var tipo = item.Origen ?? "Sin Movimiento";
+                                    if (tipo == "Orden de Compra")
+                                    {
+                                        <div class="tipo-movimiento">
+                                            <span>Órden de compra</span>
+                                            <i class="fa fa-sort-desc tipo-salida" aria-hidden="true"></i>
+                                        </div>
+                                    }
+                                    else if (tipo == "Remito")
+                                    {
+                                        <div class="tipo-movimiento">
+                                            <span>@tipo</span>
+                                            <i class="fa fa-sort-asc tipo-entrada" aria-hidden="true"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tipo-movimiento">
+                                            <span>@tipo</span>
+                                            <span></span>
+                                        </div>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align:left; width:10%;">
+                                @{
+                                    if (item.Origen == "Orden de Compra" && !string.IsNullOrEmpty(item.PurchaseOrder_Number))
+                                    {
+                                        <span>@item.PurchaseOrder_Number</span>
+                                    }
+                                    else if (item.Origen == "Remito" && !string.IsNullOrEmpty(item.DeliveryNote_Number))
+                                    {
+                                        <span>@item.DeliveryNote_Number</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Sin número</span>
+                                    }
+                                }
+                            </td>
+                            <td style="text-align:left; width:20%;">
+                                @(item.User_FullName ?? "Sin Responsable")
+                            </td>
+                            <td style="text-align:left; width:20%;">
+                                @(item.Product_Name ?? "Sin Producto")
+                            </td>
+                            <td style="text-align:left; width:10%;">
+                                @(item.Quantity > 0 ? item.Quantity.ToString() : "0")
+                            </td>
+                            <td style="text-align:left; width:20%;">
+                                @if (!string.IsNullOrEmpty(item.DetalleURL))
+                                {
+                                    <a href="@item.DetalleURL">Ver Detalle</a>
+                                }
+                                else
+                                {
+                                    <span>No disponible</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+</body>
+</html>

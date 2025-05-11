@@ -1,0 +1,495 @@
+﻿@model DepositControl.Bussines.DeliveryNote
+
+@{
+    Layout = "~/Views/Shared/_LayoutBcri.cshtml";
+    List<SelectListItem> productList = (List<SelectListItem>)ViewBag.ProductList;
+    List<SelectListItem> stateList = (List<SelectListItem>)ViewBag.StateDeliveryNoteList;
+    
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Editar Order de Compra</title>
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @ViewBag.Alert
+        </div>
+    }
+    @if (TempData["Alert"] != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @TempData["Alert"]
+        </div>
+    }
+
+    @using (Html.BeginForm("Edit", "DeliveryNote", FormMethod.Post, new { @id = "deliveryNoteForm", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-horizontal">
+            <h1><b>Editar Remito</b></h1>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                <div class="col-sm-3">
+                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = Model.Date.ToString("yyyy-MM-dd"), @disabled = true } })
+                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Number, "Número de Remito", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número del remito", @disabled = true })
+                    @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @if (Model.StateDeliveryNote.Id == 1)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StateDeliveryNote.Id, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                    <div class="col-sm-3">
+                        @Html.DropDownList("StateDeliveryNote.Id", stateList, new { @class = "form-control", id = "stateDeliveryNote" })
+                        @Html.ValidationMessageFor(model => model.StateDeliveryNote.Id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StateDeliveryNote.Id, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                    <div class="col-sm-3">
+                        @Html.DropDownList("StateDeliveryNote.Id", stateList, new { @class = "form-control", @disabled = true })
+                        @Html.ValidationMessageFor(model => model.StateDeliveryNote.Id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+            @if (Model.StateDeliveryNote.Id == 1)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FileDeliveryNote, "Archivo PDF", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                    <div class="col-sm-3">
+                        @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
+                        {
+                            <p>
+                                <strong>Archivo actual:</strong>
+                                <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank">Ver PDF</a>
+                            </p>
+                            <p><em>Si deseas reemplazarlo, selecciona uno nuevo.</em></p>
+                        }
+                        else
+                        {
+                            <p>Ningún archivo seleccionado</p>
+                        }
+                        <input type="file" name="file" accept="application/pdf" class="form-control" id="FileDeliveryNote" />
+                        @Html.ValidationMessageFor(model => model.FileDeliveryNote, "", new { @class = "text-danger" })
+                        <span id="fileError" class="text-danger" style="display:none;"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FileDeliveryNote, "Archivo PDF", new { @class = "control-label col-sm-1", @style = "text-align:left;", @disabled = true })
+                    <div class="col-sm-3">
+                        @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
+                        {
+                            <p>
+                                <strong>Archivo actual:</strong>
+                                <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank" disable>Ver PDF</a>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>Ningún archivo seleccionado</p>
+                        }
+                        @Html.ValidationMessageFor(model => model.FileDeliveryNote, "", new { @class = "text-danger" })
+                        <span id="fileError" class="text-danger" style="display:none;"></span>
+                    </div>
+                </div>
+            }
+
+            <br />
+            <h4>Detalles</h4>
+            <table class="table" id="detailsTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DeliveryNoteDetails != null && Model.DeliveryNoteDetails.Any())
+                    {
+                        for (int i = 0; i < Model.DeliveryNoteDetails.Count; i++)
+                        {
+                            if (Model.StateDeliveryNote.Id == 1)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DropDownList($"Details[{i}].Product", new SelectList(productList, "Value", "Text", Model.DeliveryNoteDetails[i].Product.Id), new { @class = "form-control product-select" })
+                                        @Html.ValidationMessage($"Details[{i}].Product", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox($"Details[{i}].Quantity", Model.DeliveryNoteDetails[i].Quantity, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
+                                        @Html.ValidationMessage($"Details[{i}].Quantity", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox($"Details[{i}].Price", Model.DeliveryNoteDetails[i].Product.Price, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-default removeDetail">Eliminar</button>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DropDownList($"Details[{i}].Product", new SelectList(productList, "Value", "Text", Model.DeliveryNoteDetails[i].Product.Id), new { @class = "form-control product-select", @disabled = "disabled" })
+                                        @Html.ValidationMessage($"Details[{i}].Product", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox($"Details[{i}].Quantity", Model.DeliveryNoteDetails[i].Quantity, new { @class = "form-control quantity-input", @type = "number", @min = "1", @disabled = "disabled" })
+                                        @Html.ValidationMessage($"Details[{i}].Quantity", "", new { @class = "text-danger" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBox($"Details[{i}].Price", Model.DeliveryNoteDetails[i].Product.Price, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-default removeDetail" disabled>Eliminar</button>
+                                    </td>
+                                </tr>
+
+                            }
+                        }
+                    }
+                    else if (Model.StateDeliveryNote.Id == 1)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select" })
+                                @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
+                                @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                            </td>
+                            <td class="text-right">
+                                <button type="button" class="btn btn-default removeDetail">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td>
+                                @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select", @disabled = "disabled" })
+                                @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1", @disabled = "disabled" })
+                                @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                            </td>
+                            <td class="text-right">
+                                <button type="button" class="btn btn-default removeDetail" disabled>Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (Model.StateDeliveryNote.Id == 1)
+            {
+                <div class="form-group text-right">
+                    <div class="col-md-12">
+                        <button type="button" id="addDetail" class="btn btn-default">Agregar Detalle</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group text-right">
+                    <div class="col-md-12">
+                        <button type="button" id="addDetail" class="btn btn-default" disabled>Agregar Detalle</button>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="col-md-7 text-right">
+                        @Html.LabelFor(model => model.TotalAmount, "Monto Total", new { @class = "control-label" })
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", @type = "number", @step = "0.01", @readonly = "readonly", @id = "TotalAmount" })
+                        @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            @if (Model.StateDeliveryNote.Id == 1)
+            {
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-8 text-right">
+                        <input type="submit" value="Actualizar" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-8 text-right">
+                        <input type="submit" value="Actualizar" class="btn btn-default" disabled />
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Volver a la Grilla", "Index", "DeliveryNote")
+    </div>
+
+    <!-- Modal de Confirmación Bootstrap -->
+    <div class="modal fade" id="irreversibleConfirmModal" tabindex="-1" role="dialog" aria-labelledby="irreversibleConfirmLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#f5f5f5;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="irreversibleConfirmLabel">
+                        <span class="glyphicon glyphicon-question-sign" style="color:#31708f; font-size:15px; margin-right:8px;"></span>
+                        Atención
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <h4>
+                        Esta acción deshabilitará la opción de agregar nuevos productos y modificar las cantidades.<br><br>
+                        ¿Desea continuar de todos modos?
+                    </h4>
+                </div>
+                <div class="modal-footer" style="text-align: right;">
+                    <button type="button" class="btn btn-primary" id="irreversibleConfirmYes">Aceptar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="irreversibleConfirmNo">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script>
+        const productPrices = @Html.Raw(Json.Encode(ViewBag.ProductPrices));
+        const productList = @Html.Raw(Json.Encode(ViewBag.ProductList));
+        const isPending = @(Model.StateDeliveryNote.Id == 1 ? "true" : "false");
+
+        $(document).ready(function () {
+            function calculateTotal() {
+                if (!isPending) return;
+                let total = 0;
+                $('#detailsTable tbody tr').each(function () {
+                    let quantity = parseFloat($(this).find('.quantity-input').val()) || 0;
+                    let price = parseFloat($(this).find('.price-input').val()) || 0;
+                    total += quantity * price;
+                });
+                $('#TotalAmount').val(total.toFixed(2));
+            }
+
+            function getSelectedProducts() {
+                let selected = [];
+                $('#detailsTable tbody tr').each(function () {
+                    let productId = $(this).find('.product-select').val();
+                    if (productId && productId !== '') {
+                        selected.push(productId);
+                    }
+                });
+                return selected;
+            }
+
+            function updateProductOptions(selectElement, selectedProducts, selectedValue) {
+                selectElement.empty();
+
+                productList.forEach(function (item) {
+                    if (!selectedProducts.includes(item.Value) || item.Value === selectedValue) {
+                        selectElement.append(
+                            $('<option></option>').val(item.Value).text(item.Text)
+                        );
+                    }
+                });
+
+                if (selectedValue) {
+                    selectElement.val(selectedValue);
+                }
+            }
+
+            function updateAllProductSelects() {
+                if (!isPending) return;
+                let selectedProducts = getSelectedProducts();
+                $('#detailsTable tbody tr').each(function () {
+                    let select = $(this).find('.product-select');
+                    let currentValue = select.val();
+                    updateProductOptions(select, selectedProducts, currentValue);
+                });
+            }
+
+            $('#addDetail').click(function () {
+                if (!isPending) return;
+                let rowCount = $('#detailsTable tbody tr').length;
+                let newRow = $('#detailsTable tbody tr:first').clone(true);
+
+                newRow.find('input, select').each(function () {
+                    let name = $(this).attr('name');
+                    if (name) {
+                        $(this).attr('name', name.replace(/Details\[\d+\]/, `Details[${rowCount}]`));
+                    }
+                });
+
+                newRow.find('input').val('');
+                newRow.find('select').prop('selectedIndex', 0);
+                newRow.find('.text-danger').remove();
+                newRow.find('.price-input').val('');
+
+                $('#detailsTable tbody').append(newRow);
+                updateAllProductSelects();
+                calculateTotal();
+            });
+
+            $(document).on('click', '.removeDetail', function () {
+                if (!isPending) return;
+                if ($('#detailsTable tbody tr').length > 1) {
+                    $(this).closest('tr').remove();
+                    $('#detailsTable tbody tr').each(function (index) {
+                        $(this).find('input, select').each(function () {
+                            let name = $(this).attr('name');
+                            if (name) {
+                                $(this).attr('name', name.replace(/Details\[\d+\]/, `Details[${index}]`));
+                            }
+                        });
+                    });
+                    updateAllProductSelects();
+                    calculateTotal();
+                } else {
+                    console.log('No se puede eliminar: solo queda una fila'); // Depuración
+                }
+            });
+
+            $(document).on('change', '.product-select', function () {
+                if (!isPending) return;
+                let row = $(this).closest('tr');
+                let priceInput = row.find('.price-input');
+                let selectedProductId = $(this).val();
+
+                if (selectedProductId && productPrices[selectedProductId]) {
+                    priceInput.val(productPrices[selectedProductId].toFixed(2));
+                } else {
+                    priceInput.val('');
+                }
+                updateAllProductSelects();
+                calculateTotal();
+            });
+
+            $(document).on('input', '.quantity-input', function () {
+                if (!isPending) return
+                calculateTotal();
+            });
+
+            $('.product-select').each(function () {
+                let row = $(this).closest('tr');
+                let priceInput = row.find('.price-input');
+                let selectedProductId = $(this).val();
+
+                if (selectedProductId && productPrices[selectedProductId]) {
+                    priceInput.val(productPrices[selectedProductId].toFixed(2));
+                }
+            });
+
+            $(document).on('change', '#FileDeliveryNote', function (e) {
+                var fileInput = this;
+                var fileError = $('#fileError');
+                fileError.hide().text('');
+
+                if (fileInput.files && fileInput.files.length > 0) {
+                    var file = fileInput.files[0];
+                    var fileSize = file.size;
+                    var extension = file.name.split('.').pop().toLowerCase();
+
+                    if (extension !== 'pdf') {
+                        fileError.text('Solo se permiten archivos PDF.').show();
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    if (fileSize > 1048576) {
+                        fileError.text('El archivo no puede superar 1 MB.').show();
+                        fileInput.value = '';
+                        return;
+                    }
+
+                    fileError.text('Archivo válido.').show().removeClass('text-danger').addClass('text-success');
+                }
+            });
+
+            updateAllProductSelects();
+            calculateTotal();
+            // --- NUEVO: Advertencia irreversible para cambio de estado ---
+            const stateDropdown = $('#stateDeliveryNote');
+            const irreversibleStates = [2, 3];
+            var pendingStateChange = null;
+            var pendingPrevValue = null;
+
+            stateDropdown.data('previousValue', stateDropdown.val());
+
+            stateDropdown.on('change', function () {
+                if (stateDropdown.is(':disabled')) return;
+
+                const newValue = parseInt($(this).val());
+                const prevValue = stateDropdown.data('previousValue');
+                if (irreversibleStates.includes(newValue)) {
+                    pendingStateChange = newValue;
+                    pendingPrevValue = prevValue;
+
+                    $('#irreversibleConfirmModal').modal('show');
+
+
+                    stateDropdown.val(prevValue);
+                } else {
+                    stateDropdown.data('previousValue', newValue);
+                }
+            });
+
+            $('#irreversibleConfirmYes').on('click', function () {
+                if (pendingStateChange !== null) {
+                    stateDropdown.val(pendingStateChange);
+                    stateDropdown.data('previousValue', pendingStateChange);
+                    $('#irreversibleConfirmModal').modal('hide')
+                }
+                pendingStateChange = null;
+                pendingPrevValue = null;
+            });
+            $('#irreversibleConfirmNo').on('click', function () {
+                stateDropdown.val(pendingPrevValue);
+                pendingStateChange = null;
+                pendingPrevValue = null;
+            });
+        });
+        </script>
+    }
+</body>
+</html>

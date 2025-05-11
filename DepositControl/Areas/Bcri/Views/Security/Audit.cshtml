@@ -1,0 +1,396 @@
+@{var Res = DepositControl.Res.res;}
+@{
+    ViewBag.Title = Res.audit;
+}
+<style>
+    .dropdown-menu {
+        min-width: 200px;
+        /*display: block;*/
+        max-height: 400px;
+        overflow: auto;
+        /*overflow-y: scroll;*/
+        font-size: 12px !important;
+    }
+
+    .col-md-8 {
+        width: 85%;
+    }
+
+    .col-md-4 {
+        width: 15%;
+    }
+
+    .dropdown-menu.columns-2 {
+        min-width: 300px;
+    }
+
+    .dropdown-menu.columns-3 {
+        min-width: 450px;
+    }
+
+    .dropdown-menu li a {
+        padding: 2px 0px 0px 0px;
+        font-weight: 300;
+        width: 100%;
+    }
+
+    .dropdown-menu .scrolleableDD {
+        height: auto;
+        max-height: 200px;
+        overflow-x: hidden;
+    }
+
+    .dropdown-menu .row {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .multi-column-dropdown {
+        list-style: none;
+        padding: 0px 0px 0px 0px;
+        text-align: left;
+    }
+
+        .multi-column-dropdown li a {
+            display: block;
+            clear: both;
+            line-height: 1.428571429;
+            color: #333;
+            white-space: normal;
+        }
+
+    .btn.btn-default.dropdown-toggle {
+        padding: 2px 5px 2px 5px !important;
+    }
+
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+    }
+
+    .ui-th-column, .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+        white-space: normal;
+    }
+
+    /*.ui-jqgrid tr.footrow-ltr td {
+           text-align: right !important;
+       }*/
+
+    /*.ui-jqgrid tr.ui-row-ltr td {
+           text-align: right !important;
+       }*/
+
+    .HBody {
+        padding-bottom: 0;
+    }
+
+    .ui-th-column, .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+        white-space: normal !important;
+    }
+
+    .ui-jqgrid .ui-jqgrid-htable th div {
+        height: auto !important;
+    }
+
+    .ui-th-ltr, .ui-jqgrid .ui-jqgrid-htable th.ui-th-ltr {
+        text-align: center;
+    }
+
+    .configuration {
+        width: 98%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }
+
+        .configuration .k-textbox {
+            width: 23px;
+        }
+
+    .header {
+        width: 500px;
+        height: 50px;
+        color: #000;
+        display: table;
+        margin: 0 auto 0 auto;
+    }
+
+    #contenedor {
+        display: table;
+        /*border: 2px solid #000;*/
+        width: auto;
+        text-align: center;
+        margin: 0;
+    }
+
+    .contenidos {
+        display: table-row;
+    }
+
+    .celdas {
+        display: table-cell;
+        /*border: 1px solid #000;
+           /*padding: 10px;*/
+        width: auto;
+        height: auto;
+        display: table-cell;
+        padding: 5px 10px 5px 10px;
+        vertical-align: middle;
+    }
+
+    .ui-jqgrid {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .gridCnt {
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 15px;
+        width: 98%;
+        display: none;
+    }
+
+    .divCnt {
+        /*margin-left: auto;
+           margin-right: auto;*/
+        margin-top: 10px;
+        /*padding-top: 15px;*/
+        width: 98%;
+        height: 392px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        text-align: center;
+    }
+
+    .dashBoard {
+        /*padding-top:30px;*/
+        /*border-radius: 15px;
+           background-color: #A6C9E2; /*#e5e5e5;*/
+        width: 98%;
+        height: auto;
+        /*float: left;*/
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 5px;
+        /*min-height:375px;*/
+        /*overflow:auto;*/
+        backface-visibility: visible;
+        transform-origin: 100% 50%;
+        transform: perspective(800px) rotateY(0deg);
+    }
+
+    .tituloAlign {
+        float: left;
+        width: 200px;
+        margin: 5px;
+        text-align: center;
+        color: #000000;
+    }
+
+    .rowCnt {
+        margin-top: 10px;
+        /*padding-top:30px;*/
+        width: 98%;
+        /*height:250px;*/
+        margin-left: 15px;
+        /*margin-right:auto;*/
+        /*margin:auto;*/
+        float: left;
+        /*border:1px solid;*/
+    }
+
+    .tableDiv {
+        display: table;
+    }
+
+    .titleDiv {
+        display: table-caption;
+        text-align: center;
+        font-weight: bold;
+        font-size: larger;
+    }
+
+    .headingDiv {
+        display: table-row;
+        font-weight: bold;
+        text-align: center;
+        font-size: 0.85em;
+    }
+
+    .rowDiv {
+        display: table-row;
+    }
+
+    .cellDiv {
+        display: table-cell;
+        border: 1px solid #4297d7;
+        /*border-width: thin;*/
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .ui-progressbar {
+        position: relative;
+    }
+
+    .progressBarLabel {
+        position: absolute;
+        left: 50%;
+        top: 4px;
+        font-weight: bold;
+        text-shadow: 1px 1px 0 #fff;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div id="filterDiv">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button id="btnToggleFilters" type="button" class="btn btn-primary" data-toggle="collapse" data-target="#panelBodyFilter">
+                        Filtros <span class="fa fa-unsorted" aria-hidden="false"></span>
+                    </button>
+                </div>
+                <div class="panel-body collapse" id="panelBodyFilter">
+                    <div class="row" style="padding-bottom: 2px;">
+                        <div class="col-md-3">
+                            <div>
+                                <label class="small alignText">
+                                    @Res.dateRange
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="filterFromFilters" name="filterFromFilters" class="form-control" placeholder=@Res.dateFrom>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="filterToFilters" name="filterToFilters" class="form-control" placeholder=@Res.dateTo>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom: 2px;">
+                        <div class="col-md-3">
+                            <div>
+                                <label class="small alignText">
+                                    @Res.typeOfAction
+                                </label>
+                            </div>
+                        </div>
+                        <div id="selAct">
+                            @Html.Partial("FilterAction", new { @placeholder = Res.selectAnAction })
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-outline btn-primary" id="btnFilter">
+                                <span class="fa fa-search" aria-hidden="true"></span> @Res.search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>@Res.audit</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div id="MsgError"> </div>
+        <div class="row">
+            <div id="progressBar" style="display: none;">
+                <div class="progressBarLabel">Cargando</div>
+            </div>
+        </div>
+
+        <div id="buttonExport" style="text-align:right;">
+            <div class="menuRibbon-item">
+                @if (ViewBag.HabilitadoBotonExportXls)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="javascript: CallBtnExportXls();" title="Descargar Excel">
+                        <i class="fa fa-file-excel-o"></i>
+                    </button>
+
+                }
+                @if (ViewBag.HabilitadoBotonExportPdf)
+                {
+                    <button type="button" class="btn btn-default btn-lg" onclick="javascript: CallBtnExportPdf();" title="Descargar PDF">
+                        <i class="fa fa-file-pdf-o"></i>
+
+                    </button>
+
+                }
+            </div>
+        </div>
+        <div class="row" id="dashBoardContent">
+            <table id="gridAction"></table>
+            <div id="gridActionPager"></div>
+        </div>
+    </div>
+</div>
+
+<div id="AuditJsData"
+        data-loaddataurl="@Url.Action("GetActions")"
+        data-getdetallelog="@Url.Action("ViewDetail")"
+        data-geturl="@Url.Action("GetAccions")">
+</div>
+<div>
+    <div id="dialog-confirm" title=@Res.detailaction>
+        <div id="dialog-confirm-body"></div>
+    </div>
+</div>
+<script type="text/javascript">
+function CallBtnExportXls() {
+
+    //alert(actParse);
+    var fromDateParseParcial = $("#filterFromFilters").val();
+    var toDateParseParcial = $("#filterToFilters").val();
+
+    var DesdeTotal = fromDateParseParcial.split('/');
+    var diaDesde = DesdeTotal[0];
+    var mesDesde = DesdeTotal[1];
+    var anoDesde = DesdeTotal[2];
+
+    var hastaTotal = toDateParseParcial.split('/');
+    var diaHasta = hastaTotal[0];
+    var mesHasta = hastaTotal[1];
+    var anoHasta = hastaTotal[2];
+
+    var fromDateParse = diaDesde + "/" + mesDesde + "/" + anoDesde;
+    var toDateParse = diaHasta + "/" + mesHasta + "/" + anoHasta;
+
+    var urlGrid = '@Url.Action("exportExcel", "Security")?tittle=' + "Auditoria" + "&fromDate=" + fromDateParse + "&toDate=" + toDateParse + "&act01=" + obtenerDdAcciones() + "&all=" + checkAll();
+    var sLink = urlGrid;
+    window.location.href = sLink;
+}
+
+function CallBtnExportPdf() {
+
+    var fromDateParseParcial = $("#filterFromFilters").val();
+    var toDateParseParcial = $("#filterToFilters").val();
+
+    var DesdeTotal = fromDateParseParcial.split('/');
+    var diaDesde = DesdeTotal[0];
+    var mesDesde = DesdeTotal[1];
+    var anoDesde = DesdeTotal[2];
+
+    var hastaTotal = toDateParseParcial.split('/');
+    var diaHasta = hastaTotal[0];
+    var mesHasta = hastaTotal[1];
+    var anoHasta = hastaTotal[2];
+
+    var fromDateParse = diaDesde + "/" + mesDesde + "/" + anoDesde;
+    var toDateParse = diaHasta + "/" + mesHasta + "/" + anoHasta;
+
+    var urlGrid = '@Url.Action("exportPDF", "Security")?tittle=' + "Auditoria" + "&fromDate=" + fromDateParse + "&toDate=" + toDateParse + "&act01=" + obtenerDdAcciones() + "&all=" + checkAll();
+    var sLink = urlGrid;
+    window.location.href = sLink;
+}
+</script>
+@section scripts {
+    @Scripts.Render("~/Areas/Bcri/Views/Security/Audit.js")
+}
+

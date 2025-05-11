@@ -1,0 +1,178 @@
+@model List<DepositControl.Areas.Bcri.Models.VDetailAccion>
+@{
+    string sFechaAccion = ViewData["Audit.DetailAccion.DateLogAccion"].ToString();
+    string sUsuarioAccion = ViewData["Audit.DetailAccion.UserLogAccion"].ToString();
+    string sAccion = ViewData["Audit.DetailAccion.AccionLogAccion"].ToString();
+    string sTitleOldValue = ViewData["Audit.DetailAccion.GridTitleOldValue"].ToString();
+    string sTitleValue = ViewData["Audit.DetailAccion.GridTitleValue"].ToString();
+}
+
+@using DNF.Security.Bussines
+@{var Res = DepositControl.Res.res;}
+<style>
+    .configuration {
+        width: 98%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }
+
+        .configuration .k-textbox {
+            width: 23px;
+        }
+
+    .header {
+        width: 500px;
+        height: 50px;
+        color: #000;
+        display: table;
+        margin: 0 auto 0 auto;
+    }
+
+    #contenedor {
+        display: table;
+        /*border: 2px solid #000;*/
+        width: auto;
+        text-align: center;
+        margin: 0;
+    }
+
+    #contenidos {
+        display: table-row;
+    }
+
+    .celdas {
+        display: table-cell;
+        /*border: 1px solid #000;
+        vertical-align: middle;*/
+        padding: 10px;
+        width: auto;
+        height: auto;
+    }
+
+    .gridCnt {
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 15px;
+        width: 98%;
+    }
+
+    .k-block{
+        border-radius: 4px;
+        background-color: #e3e3e3;
+        color: #2e2e2e;
+        border-color: #c5c5c5;
+        outline: 0;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        box-sizing: border-box;
+        padding: 2px;
+        line-height: normal;
+    }
+
+    .k-shadow {
+        -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+    }
+</style>
+
+<div style="width:100%;">
+    <div class="row configuration k-block k-shadow">
+        <div id="contenedor">
+            <div id="contenidos">
+                <div class="celdas"><span><strong>@Res.date:</strong></span></div>
+                <div class="celdas"><span>@sFechaAccion</span></div>
+                <div class="celdas"></div>
+                <div class="celdas"><span><strong>@Res.user:</strong></span></div>
+                <div class="celdas"><span>@sUsuarioAccion</span></div>
+                <div class="celdas"></div>
+                <div class="celdas"><span><strong>@Res.action:</strong></span></div>
+                <div class="celdas"><span>@sAccion</span></div>
+                <div class="celdas"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+
+    @* Grilla con los cambios *@
+    <div class="row" style="padding:0 20px;">
+        <table id="gridDetailAction"></table>
+        <div id="gridDetailActionPager"></div>
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        var gridTable = "#gridDetailAction";
+        var gridPager = gridTable + "Pager";
+
+        @{
+            var datos = new List<Dictionary<string,string>>();
+            foreach (var item in Model)
+            {
+                var fila = new Dictionary<string, string>();
+                if (item.StructDescription.Contains("Password"))
+                {
+                    fila.Add("campo", item.StructDescription);
+                    fila.Add("vActual", "");
+                    fila.Add("vAnterior", "");
+                }
+                else
+                {
+                    fila.Add("campo", item.StructDescription);
+                    fila.Add("vActual", item.Value);
+                    fila.Add("vAnterior" , item.OldValue );
+                }
+                datos.Add(fila);
+            };
+        }
+        //console.log(datos);
+
+        var data = { "rows":  @(Html.Raw(Json.Encode(datos))) };
+        console.log(data);
+        $(gridTable).jqGrid({
+            shrinkToFit: true,
+            forceFit: false,
+            autowidth: true,
+            rownumbers: true,
+            datatype: "jsonstring",
+            datastr: data,
+            jsonReader: { repeatitems: false },
+            colNames: ["Campo", '@sTitleValue', '@sTitleOldValue'],
+            colModel: [
+                    {
+                        label: "campo",
+                        name: "campo",
+                        width: 110
+                    },
+                    {
+                        label: "vActual",
+                        name: "vActual",
+                        width: 220,
+                    },
+                    {
+                        label: "vAnterior",
+                        name: "vAnterior",
+                        width: 220
+                    }
+            ],
+            pager: gridPager,
+            sortname: 'Date',
+            sortorder: 'ASC',
+            sortable: true,
+            loadonce: true,
+            ignoreCase: false,
+            viewrecords: true,
+        });
+
+        var gridName = "gridDetailAction";
+        $(window).bind("resize", function () {
+            var grid = $("#" + gridName);
+            grid.jqGrid("setGridWidth", (grid.parent().parent().parent().parent().parent().width()));
+        }).trigger("resize");
+
+    });
+</script>
