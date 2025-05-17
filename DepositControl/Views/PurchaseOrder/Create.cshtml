@@ -24,99 +24,106 @@
             <strong>Error!</strong> @ViewBag.Alert
         </div>
     }
+    @if (TempData["Alert"] != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @TempData["Alert"]
+        </div>
+    }
 
     @using (Html.BeginForm("Create", "PurchaseOrder", FormMethod.Post, new { @id = "purchaseOrderForm" }))
     {
         @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h1><b>Crear Orden de Compra</b></h1>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <h1><b>Crear Orden de Compra</b></h1>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-        <div class="col-sm-3">
-            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
-            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Number, "Número", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-        <div class="col-sm-3">
-            @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número de la Órden de compra" })
-            @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.SalePoint, "Punto de Venta", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-        <div class="col-sm-3">
-            @Html.DropDownList("SalePoint", salePointList, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.SalePoint, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.StatePurchaseOrder, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-        <div class="col-sm-3">
-            @Html.DropDownListFor(model => model.StatePurchaseOrder, stateList, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.StatePurchaseOrder, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <br />
-    <h4>Detalles</h4>
-    <table class="table" id="detailsTable">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select" })
-                    @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
-                </td>
-                <td>
-                    @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
-                    @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
-                </td>
-                <td>
-                    @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
-                </td>
-                <td class="text-right">
-                    <button type="button" class="btn btn-default removeDetail">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="form-group text-right">
-        <div class="col-md-12">
-            <button type="button" id="addDetail" class="btn btn-default">Agregar Detalle</button>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-12">
-            <div class="col-md-7 text-right">
-                @Html.LabelFor(model => model.TotalAmount, "Monto Total", new { @class = "control-label" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                <div class="col-sm-3">
+                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                </div>
             </div>
-            <div class="col-sm-3">
-                @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", @type = "number", @step = "0.01", @readonly = "readonly" })
-                @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Number, "Número", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número de la Órden de compra" })
+                    @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SalePoint, "Punto de Venta", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                <div class="col-sm-3">
+                    @Html.DropDownList("SalePoint", salePointList, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SalePoint, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.StatePurchaseOrder, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+                <div class="col-sm-3">
+                    @Html.DropDownListFor(model => model.StatePurchaseOrder, stateList, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.StatePurchaseOrder, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <br />
+            <h4>Detalles</h4>
+            <table class="table" id="detailsTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select" })
+                            @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
+                            @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                        </td>
+                        <td class="text-right">
+                            <button type="button" class="btn btn-default removeDetail">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-group text-right">
+                <div class="col-md-12">
+                    <button type="button" id="addDetail" class="btn btn-default">Agregar Detalle</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="col-md-7 text-right">
+                        @Html.LabelFor(model => model.TotalAmount, "Monto Total", new { @class = "control-label" })
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", @type = "number", @step = "0.01", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-8 text-right">
+                    <input type="submit" value="Crear" class="btn btn-default" />
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-4 col-sm-offset-8 text-right">
-            <input type="submit" value="Crear" class="btn btn-default" />
-        </div>
-    </div>
-</div>
     }
 
     <div>
@@ -127,7 +134,7 @@
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/jqueryval")
 
-<script>
+        <script>
             // Obtener los precios de los productos desde el ViewBag
             const productPrices = @Html.Raw(Json.Encode(ViewBag.ProductPrices));
              const productList = @Html.Raw(Json.Encode(ViewBag.ProductList));
@@ -249,7 +256,7 @@
                 updateAllProductSelects();
                 calculateTotal();
             });
-</script>
+        </script>
     }
 </body>
 </html>

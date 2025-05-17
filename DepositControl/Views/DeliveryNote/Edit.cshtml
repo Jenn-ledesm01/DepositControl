@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutBcri.cshtml";
     List<SelectListItem> productList = (List<SelectListItem>)ViewBag.ProductList;
     List<SelectListItem> stateList = (List<SelectListItem>)ViewBag.StateDeliveryNoteList;
-    
+    bool isAdmin = (bool)ViewBag.IsAdmin;
 }
 
 <!DOCTYPE html>
@@ -36,160 +36,139 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
 
-        <div class="form-horizontal">
-            <h1><b>Editar Remito</b></h1>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-horizontal">
+    <h1><b>Editar Remito</b></h1>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-                <div class="col-sm-3">
-                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = Model.Date.ToString("yyyy-MM-dd"), @disabled = true } })
-                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                </div>
+    @if (ViewBag.IsAdmin == true)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = Model.Date.ToString("yyyy-MM-dd") } })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Number, "Número de Remito", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-                <div class="col-sm-3">
-                    @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número del remito", @disabled = true })
-                    @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
-                </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Number, "Número de Remito", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número del remito" })
+                @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
             </div>
-            @if (Model.StateDeliveryNote.Id == 1)
-            {
-                <div class="form-group">
-                    @Html.LabelFor(model => model.StateDeliveryNote.Id, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-                    <div class="col-sm-3">
-                        @Html.DropDownList("StateDeliveryNote.Id", stateList, new { @class = "form-control", id = "stateDeliveryNote" })
-                        @Html.ValidationMessageFor(model => model.StateDeliveryNote.Id, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="form-group">
-                    @Html.LabelFor(model => model.StateDeliveryNote.Id, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-                    <div class="col-sm-3">
-                        @Html.DropDownList("StateDeliveryNote.Id", stateList, new { @class = "form-control", @disabled = true })
-                        @Html.ValidationMessageFor(model => model.StateDeliveryNote.Id, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            }
-            @if (Model.StateDeliveryNote.Id == 1)
-            {
-                <div class="form-group">
-                    @Html.LabelFor(model => model.FileDeliveryNote, "Archivo PDF", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
-                    <div class="col-sm-3">
-                        @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
-                        {
-                            <p>
-                                <strong>Archivo actual:</strong>
-                                <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank">Ver PDF</a>
-                            </p>
-                            <p><em>Si deseas reemplazarlo, selecciona uno nuevo.</em></p>
-                        }
-                        else
-                        {
-                            <p>Ningún archivo seleccionado</p>
-                        }
-                        <input type="file" name="file" accept="application/pdf" class="form-control" id="FileDeliveryNote" />
-                        @Html.ValidationMessageFor(model => model.FileDeliveryNote, "", new { @class = "text-danger" })
-                        <span id="fileError" class="text-danger" style="display:none;"></span>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="form-group">
-                    @Html.LabelFor(model => model.FileDeliveryNote, "Archivo PDF", new { @class = "control-label col-sm-1", @style = "text-align:left;", @disabled = true })
-                    <div class="col-sm-3">
-                        @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
-                        {
-                            <p>
-                                <strong>Archivo actual:</strong>
-                                <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank" disable>Ver PDF</a>
-                            </p>
-                        }
-                        else
-                        {
-                            <p>Ningún archivo seleccionado</p>
-                        }
-                        @Html.ValidationMessageFor(model => model.FileDeliveryNote, "", new { @class = "text-danger" })
-                        <span id="fileError" class="text-danger" style="display:none;"></span>
-                    </div>
-                </div>
-            }
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, "Fecha", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = Model.Date.ToString("yyyy-MM-dd"), @disabled = true } })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Number, "Número de Remito", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número del remito", @disabled = true })
+                @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    @if (Model.StateDeliveryNote.Id == 1 || ViewBag.IsAdmin == true)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateDeliveryNote.Id, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @Html.DropDownList("StateDeliveryNote.Id", stateList, new { @class = "form-control", id = "stateDeliveryNote" })
+                @Html.ValidationMessageFor(model => model.StateDeliveryNote.Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateDeliveryNote.Id, "Estado", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @Html.DropDownList("StateDeliveryNote.Id", stateList, new { @class = "form-control", @disabled = true })
+                @Html.ValidationMessageFor(model => model.StateDeliveryNote.Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    @if (Model.StateDeliveryNote.Id == 1 || ViewBag.IsAdmin == true)
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.FileDeliveryNote, "Archivo PDF", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
+            <div class="col-sm-3">
+                @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
+                {
+                    <p>
+                        <strong>Archivo actual:</strong>
+                        <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank">Ver PDF</a>
+                    </p>
+                    <p><em>Si deseas reemplazarlo, selecciona uno nuevo.</em></p>
+                }
+                else
+                {
+                    <p>Ningún archivo seleccionado</p>
+                }
+                <input type="file" name="file" accept="application/pdf" class="form-control" id="FileDeliveryNote" />
+                @Html.ValidationMessageFor(model => model.FileDeliveryNote, "", new { @class = "text-danger" })
+                <span id="fileError" class="text-danger" style="display:none;"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.LabelFor(model => model.FileDeliveryNote, "Archivo PDF", new { @class = "control-label col-sm-1", @style = "text-align:left;", @disabled = true })
+            <div class="col-sm-3">
+                @if (!string.IsNullOrEmpty(Model.FileDeliveryNote))
+                {
+                    <p>
+                        <strong>Archivo actual:</strong>
+                        <a href="@Url.Action("DownloadFile", "DeliveryNote", new { id = Model.Id, inline = true })" target="_blank" disable>Ver PDF</a>
+                    </p>
+                }
+                else
+                {
+                    <p>Ningún archivo seleccionado</p>
+                }
+                @Html.ValidationMessageFor(model => model.FileDeliveryNote, "", new { @class = "text-danger" })
+                <span id="fileError" class="text-danger" style="display:none;"></span>
+            </div>
+        </div>
+    }
 
-            <br />
-            <h4>Detalles</h4>
-            <table class="table" id="detailsTable">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.DeliveryNoteDetails != null && Model.DeliveryNoteDetails.Any())
-                    {
-                        for (int i = 0; i < Model.DeliveryNoteDetails.Count; i++)
-                        {
-                            if (Model.StateDeliveryNote.Id == 1)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DropDownList($"Details[{i}].Product", new SelectList(productList, "Value", "Text", Model.DeliveryNoteDetails[i].Product.Id), new { @class = "form-control product-select" })
-                                        @Html.ValidationMessage($"Details[{i}].Product", "", new { @class = "text-danger" })
-                                    </td>
-                                    <td>
-                                        @Html.TextBox($"Details[{i}].Quantity", Model.DeliveryNoteDetails[i].Quantity, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
-                                        @Html.ValidationMessage($"Details[{i}].Quantity", "", new { @class = "text-danger" })
-                                    </td>
-                                    <td>
-                                        @Html.TextBox($"Details[{i}].Price", Model.DeliveryNoteDetails[i].Product.Price, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
-                                    </td>
-                                    <td class="text-right">
-                                        <button type="button" class="btn btn-default removeDetail">Eliminar</button>
-                                    </td>
-                                </tr>
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DropDownList($"Details[{i}].Product", new SelectList(productList, "Value", "Text", Model.DeliveryNoteDetails[i].Product.Id), new { @class = "form-control product-select", @disabled = "disabled" })
-                                        @Html.ValidationMessage($"Details[{i}].Product", "", new { @class = "text-danger" })
-                                    </td>
-                                    <td>
-                                        @Html.TextBox($"Details[{i}].Quantity", Model.DeliveryNoteDetails[i].Quantity, new { @class = "form-control quantity-input", @type = "number", @min = "1", @disabled = "disabled" })
-                                        @Html.ValidationMessage($"Details[{i}].Quantity", "", new { @class = "text-danger" })
-                                    </td>
-                                    <td>
-                                        @Html.TextBox($"Details[{i}].Price", Model.DeliveryNoteDetails[i].Product.Price, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
-                                    </td>
-                                    <td class="text-right">
-                                        <button type="button" class="btn btn-default removeDetail" disabled>Eliminar</button>
-                                    </td>
-                                </tr>
-
-                            }
-                        }
-                    }
-                    else if (Model.StateDeliveryNote.Id == 1)
+    <br />
+    <h4>Detalles</h4>
+    <table class="table" id="detailsTable">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.DeliveryNoteDetails != null && Model.DeliveryNoteDetails.Any())
+            {
+                for (int i = 0; i < Model.DeliveryNoteDetails.Count; i++)
+                {
+                    if (Model.StateDeliveryNote.Id == 1 || ViewBag.IsAdmin == true)
                     {
                         <tr>
                             <td>
-                                @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select" })
-                                @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                                @Html.DropDownList($"Details[{i}].Product", new SelectList(productList, "Value", "Text", Model.DeliveryNoteDetails[i].Product.Id), new { @class = "form-control product-select" })
+                                @Html.ValidationMessage($"Details[{i}].Product", "", new { @class = "text-danger" })
                             </td>
                             <td>
-                                @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
-                                @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                                @Html.TextBox($"Details[{i}].Quantity", Model.DeliveryNoteDetails[i].Quantity, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
+                                @Html.ValidationMessage($"Details[{i}].Quantity", "", new { @class = "text-danger" })
                             </td>
                             <td>
-                                @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                                @Html.TextBox($"Details[{i}].Price", Model.DeliveryNoteDetails[i].Product.Price, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
                             </td>
                             <td class="text-right">
                                 <button type="button" class="btn btn-default removeDetail">Eliminar</button>
@@ -200,67 +179,108 @@
                     {
                         <tr>
                             <td>
-                                @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select", @disabled = "disabled" })
-                                @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                                @Html.DropDownList($"Details[{i}].Product", new SelectList(productList, "Value", "Text", Model.DeliveryNoteDetails[i].Product.Id), new { @class = "form-control product-select", @disabled = "disabled" })
+                                @Html.ValidationMessage($"Details[{i}].Product", "", new { @class = "text-danger" })
                             </td>
                             <td>
-                                @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1", @disabled = "disabled" })
-                                @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                                @Html.TextBox($"Details[{i}].Quantity", Model.DeliveryNoteDetails[i].Quantity, new { @class = "form-control quantity-input", @type = "number", @min = "1", @disabled = "disabled" })
+                                @Html.ValidationMessage($"Details[{i}].Quantity", "", new { @class = "text-danger" })
                             </td>
                             <td>
-                                @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                                @Html.TextBox($"Details[{i}].Price", Model.DeliveryNoteDetails[i].Product.Price, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
                             </td>
                             <td class="text-right">
                                 <button type="button" class="btn btn-default removeDetail" disabled>Eliminar</button>
                             </td>
                         </tr>
+
                     }
-                </tbody>
-            </table>
-            @if (Model.StateDeliveryNote.Id == 1)
+                }
+            }
+            else if (Model.StateDeliveryNote.Id == 1 || ViewBag.IsAdmin == true)
             {
-                <div class="form-group text-right">
-                    <div class="col-md-12">
-                        <button type="button" id="addDetail" class="btn btn-default">Agregar Detalle</button>
-                    </div>
-                </div>
+                <tr>
+                    <td>
+                        @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select" })
+                        @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1" })
+                        @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                    </td>
+                    <td class="text-right">
+                        <button type="button" class="btn btn-default removeDetail">Eliminar</button>
+                    </td>
+                </tr>
             }
             else
             {
-                <div class="form-group text-right">
-                    <div class="col-md-12">
-                        <button type="button" id="addDetail" class="btn btn-default" disabled>Agregar Detalle</button>
-                    </div>
-                </div>
+                <tr>
+                    <td>
+                        @Html.DropDownList("Details[0].Product", productList, new { @class = "form-control product-select", @disabled = "disabled" })
+                        @Html.ValidationMessage("Details[0].Product", "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.TextBox("Details[0].Quantity", null, new { @class = "form-control quantity-input", @type = "number", @min = "1", @disabled = "disabled" })
+                        @Html.ValidationMessage("Details[0].Quantity", "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.TextBox("Details[0].Price", null, new { @class = "form-control price-input", @type = "number", @step = "0.01", @readonly = "readonly" })
+                    </td>
+                    <td class="text-right">
+                        <button type="button" class="btn btn-default removeDetail" disabled>Eliminar</button>
+                    </td>
+                </tr>
             }
-            <div class="form-group">
-                <div class="col-md-12">
-                    <div class="col-md-7 text-right">
-                        @Html.LabelFor(model => model.TotalAmount, "Monto Total", new { @class = "control-label" })
-                    </div>
-                    <div class="col-sm-3">
-                        @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", @type = "number", @step = "0.01", @readonly = "readonly", @id = "TotalAmount" })
-                        @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+        </tbody>
+    </table>
+    @if (Model.StateDeliveryNote.Id == 1 || ViewBag.IsAdmin == true)
+    {
+        <div class="form-group text-right">
+            <div class="col-md-12">
+                <button type="button" id="addDetail" class="btn btn-default">Agregar Detalle</button>
             </div>
-            @if (Model.StateDeliveryNote.Id == 1)
-            {
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-8 text-right">
-                        <input type="submit" value="Actualizar" class="btn btn-default" />
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-8 text-right">
-                        <input type="submit" value="Actualizar" class="btn btn-default" disabled />
-                    </div>
-                </div>
-            }
         </div>
+    }
+    else
+    {
+        <div class="form-group text-right">
+            <div class="col-md-12">
+                <button type="button" id="addDetail" class="btn btn-default" disabled>Agregar Detalle</button>
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="col-md-7 text-right">
+                @Html.LabelFor(model => model.TotalAmount, "Monto Total", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-3">
+                @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", @type = "number", @step = "0.01", @readonly = "readonly", @id = "TotalAmount" })
+                @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    @if (Model.StateDeliveryNote.Id == 1 || ViewBag.IsAdmin == true)
+    {
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-8 text-right">
+                <input type="submit" value="Actualizar" class="btn btn-default" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-8 text-right">
+                <input type="submit" value="Actualizar" class="btn btn-default" disabled />
+            </div>
+        </div>
+    }
+</div>
     }
 
     <div>
@@ -299,10 +319,11 @@
         const productPrices = @Html.Raw(Json.Encode(ViewBag.ProductPrices));
         const productList = @Html.Raw(Json.Encode(ViewBag.ProductList));
         const isPending = @(Model.StateDeliveryNote.Id == 1 ? "true" : "false");
+        var isAdmin = @(ViewBag.IsAdmin != null && (bool)ViewBag.IsAdmin ? "true" : "false");
 
         $(document).ready(function () {
             function calculateTotal() {
-                if (!isPending) return;
+                if (!(isPending || isAdmin)) return;
                 let total = 0;
                 $('#detailsTable tbody tr').each(function () {
                     let quantity = parseFloat($(this).find('.quantity-input').val()) || 0;
@@ -340,7 +361,7 @@
             }
 
             function updateAllProductSelects() {
-                if (!isPending) return;
+                if (!(isPending || isAdmin)) return;
                 let selectedProducts = getSelectedProducts();
                 $('#detailsTable tbody tr').each(function () {
                     let select = $(this).find('.product-select');
@@ -350,7 +371,7 @@
             }
 
             $('#addDetail').click(function () {
-                if (!isPending) return;
+                if (!(isPending || isAdmin)) return;
                 let rowCount = $('#detailsTable tbody tr').length;
                 let newRow = $('#detailsTable tbody tr:first').clone(true);
 
@@ -372,7 +393,7 @@
             });
 
             $(document).on('click', '.removeDetail', function () {
-                if (!isPending) return;
+                if (!(isPending || isAdmin)) return;
                 if ($('#detailsTable tbody tr').length > 1) {
                     $(this).closest('tr').remove();
                     $('#detailsTable tbody tr').each(function (index) {
@@ -391,7 +412,7 @@
             });
 
             $(document).on('change', '.product-select', function () {
-                if (!isPending) return;
+                if (!(isPending || isAdmin)) return;
                 let row = $(this).closest('tr');
                 let priceInput = row.find('.price-input');
                 let selectedProductId = $(this).val();
@@ -406,7 +427,7 @@
             });
 
             $(document).on('input', '.quantity-input', function () {
-                if (!isPending) return
+                if (!(isPending || isAdmin)) return;
                 calculateTotal();
             });
 
@@ -461,13 +482,11 @@
 
                 const newValue = parseInt($(this).val());
                 const prevValue = stateDropdown.data('previousValue');
-                if (irreversibleStates.includes(newValue)) {
+                if (!isAdmin && irreversibleStates.includes(newValue)) {
                     pendingStateChange = newValue;
                     pendingPrevValue = prevValue;
 
                     $('#irreversibleConfirmModal').modal('show');
-
-
                     stateDropdown.val(prevValue);
                 } else {
                     stateDropdown.data('previousValue', newValue);

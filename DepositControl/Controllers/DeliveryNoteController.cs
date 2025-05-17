@@ -12,6 +12,7 @@ using System.Web;
 using DNF.Security.Bussines;
 using NPOI.SS.Formula.Functions;
 using javax.xml.soap;
+using com.sun.swing.@internal.plaf.metal.resources;
 
 namespace DepositControl.Controllers
 {
@@ -57,6 +58,13 @@ namespace DepositControl.Controllers
             ViewBag.ProductPrices = productsPrices;
         }
 
+        private bool IsAdmin()
+        {
+            long userId = long.Parse(Session["User"].ToString());
+            var userProfile = UserProfile.Dao.GetByFilter(new { User_Id = userId }).FirstOrDefault();
+            return userProfile != null && userProfile.Profile.Id == 1;
+        }
+
         // GET: DeliveryNote/Index
         [AccessCode("DeliveryNote")]
         [Authenticated]
@@ -65,7 +73,7 @@ namespace DepositControl.Controllers
             try
             {
                 var filters = new { Code = "Active", Date = dateFilter, StateDeliveryNote_Id = stateFilter, Number = numero };
-                List<DeliveryNote> deliveryNotes = DeliveryNote.Dao.GetByFilter(new { filters }).ToList();
+                List<DeliveryNote> deliveryNotes = DeliveryNote.Dao.GetByFilter(filters).ToList();
                 deliveryNotes.LoadRelation(dn => dn.StateDeliveryNote);
 
                 deliveryNotes = deliveryNotes.OrderByDescending(dn => dn.Date).ToList();
@@ -245,18 +253,16 @@ namespace DepositControl.Controllers
                         string prefix = $"Details[{index}]";
                         if (collection[$"{prefix}.Product"] == null)
                             break;
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Product"]))
+                            throw new Exception("Debe seleccionar al menos un producto.");
 
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Quantity"]))
+                            throw new Exception("La cantidad no puede ser cero.");
                         long productId = long.Parse(collection[$"{prefix}.Product"]);
                         int quantity = Convert.ToInt32(collection[$"{prefix}.Quantity"]);
-                        if (quantity == 0) 
-                        {
-                            throw new Exception($"La cantidad no puede ser cero.");
-                        }
                         Product fullProduct = Product.Dao.Get(productId);
                         if (fullProduct == null)
-                        {
                             throw new Exception($"El producto con ID {productId} no se encontró.");
-                        }
                         index++;
                     }
 
@@ -275,6 +281,8 @@ namespace DepositControl.Controllers
                         if (exists)
                         {
                             ViewBag.Alert = "El número ya está registrado.";
+                            FillDropdowns();
+                            return View(deliveryNote);
                         }
                         else
                         {
@@ -376,6 +384,7 @@ namespace DepositControl.Controllers
             {
                 item.DeliveryNoteDetails.LoadRelation(dd => dd.Product);
             }
+            ViewBag.IsAdmin = IsAdmin();
             return View(deliveryNote);
         }
 
@@ -451,7 +460,7 @@ namespace DepositControl.Controllers
                         FillDropdowns();
                         return View(deliveryNote);
                     }
-
+                    ViewBag.IsAdmin = IsAdmin();
                     var existingDetails = DeliveryNoteDetail.Dao.GetDetailsByDeliveryNoteId(deliveryNoteId).ToList();
                     var currentProductIds = new HashSet<long>();
                     var currentQuantities = new Dictionary<long, int>();
@@ -463,13 +472,14 @@ namespace DepositControl.Controllers
                         string prefix = $"Details[{index}]";
                         if (collection[$"{prefix}.Product"] == null)
                             break;
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Product"]))
+                            throw new Exception("Debe seleccionar al menos un producto.");
+
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Quantity"]))
+                            throw new Exception("La cantidad no puede ser cero.");
 
                         long productId = long.Parse(collection[$"{prefix}.Product"]);
                         int quantity = Convert.ToInt32(collection[$"{prefix}.Quantity"]);
-                        if (quantity == 0)
-                        {
-                            throw new Exception($"La cantidad no puede ser cero.");
-                        }
                         var product = Product.Dao.Get(productId);
                         if (product == null)
                             throw new Exception($"El producto con ID {productId} no se encontró.");
@@ -479,8 +489,9 @@ namespace DepositControl.Controllers
                         index++;
                     }
 
-                    // Si pasa a Recibida (Id=2) y antes no estaba en 2 => aumentar stock y crear movimientos
-                    if (newStateId == 2 && oldStateId != 2)
+                    // Si pasa a Recibida y antes no estaba en recibido => aumentar stock y crear movimientos
+                    // si pasa a Recibida y antes estaba en recibido => actualizar detalles, movimientos y stock
+                    if (newStateId == 2 && oldStateId != 2 || newStateId == 2 && oldStateId == 2)
                     {
                         // Eliminar detalles que ya no están
                         foreach (var detail in existingDetails)
@@ -489,6 +500,14 @@ namespace DepositControl.Controllers
                             {
                                 // Eliminar movimiento de stock asociado
                                 StockMovement.Dao.DeleteByDeliveryNoteDetailId(detail.Product.Id, detail.DeliveryNote.Id);
+                                var product = Product.Dao.Get(detail.Product.Id);
+                                product.Stock.Quantity -= detail.Quantity;
+                                product.Stock.Save();
+                                if (product.Stock.Quantity <= 5)
+                                    product.StateProduct = new StateProduct { Id = 4 };
+                                else
+                                    product.StateProduct = new StateProduct { Id = 1 };
+                                product.Save();
                                 DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(detail.DeliveryNote.Id, detail.Product.Id);
                             }
                         }
@@ -499,42 +518,168 @@ namespace DepositControl.Controllers
                             int quantity = kvp.Value;
                             var product = Product.Dao.Get(productId);
                             var existingDetail = existingDetails.FirstOrDefault(d => d.Product.Id == productId);
-
                             if (existingDetail != null)
                             {
-                                // Sumá SIEMPRE la cantidad al stock (porque antes no estaba sumada)
-                                product.Stock.Quantity += quantity;
-                                product.Stock.Save();
-
-                                if (product.Stock.Quantity <= 5)
-                                    product.StateProduct = new StateProduct { Id = 4 };
-                                else
-                                    product.StateProduct = new StateProduct { Id = 1 };
-                                product.Save();
-
-                                // Actualizá o creá el detalle y el movimiento de stock como corresponda
-                                if (existingDetail == null)
+                                if (oldStateId == 2)
                                 {
-                                    var detail = new DeliveryNoteDetail
+                                    if (quantity > existingDetail.Quantity)
                                     {
-                                        DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
-                                        Product = product,
-                                        Quantity = quantity,
-                                        Code = "Active"
+                                        var diff = quantity - existingDetail.Quantity;
+                                        product.Stock.Quantity += diff;
+                                        product.Stock.Save();
+
+                                        if (product.Stock.Quantity <= 5)
+                                            product.StateProduct = new StateProduct { Id = 4 };
+                                        else
+                                            product.StateProduct = new StateProduct { Id = 1 };
+                                        product.Save();
+                                        DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(existingDetail.DeliveryNote.Id, existingDetail.Product.Id);
+                                        var detail = new DeliveryNoteDetail
+                                        {
+                                            DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                            Product = product,
+                                            Quantity = quantity,
+                                            Code = "Active"
+                                        };
+                                        detail.Save();
+                                    }
+                                    else if (product.Stock.Quantity < quantity)
+                                    {
+                                        TempData["Alert"] = "El stock no es suficiente para realizar esta operación.";
+                                        return RedirectToAction("Index");
+                                    }
+                                    else
+                                    {
+                                        var difference = existingDetail.Quantity - quantity;
+                                        product.Stock.Quantity -= difference;
+                                        if (product.Stock.Quantity <= 5)
+                                            product.StateProduct = new StateProduct { Id = 4 };
+                                        else
+                                            product.StateProduct = new StateProduct { Id = 1 };
+                                        product.Stock.Save();
+                                        DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(existingDetail.DeliveryNote.Id, existingDetail.Product.Id);
+                                        var detail = new DeliveryNoteDetail
+                                        {
+                                            DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                            Product = product,
+                                            Quantity = quantity,
+                                            Code = "Active"
+                                        };
+                                        detail.Save();
+                                    }
+                                    StockMovement.Dao.DeleteByDeliveryNoteDetailId(productId, deliveryNoteId);
+                                    StockMovement stockMovement = new StockMovement
+                                    {
+                                        DateStockMovement = deliveryNote.Date.Date,
+                                        DeliveryNoteDetail_Product_Id = productId,
+                                        DeliveryNoteDetail_DeliveryNote_Id = deliveryNoteId,
+                                        Stock = product.Stock,
+                                        User = wm.User
                                     };
-                                    detail.Save();
+                                    StockMovement.Dao.SaveStockMovement(stockMovement);
                                 }
-                                // Siempre elimina y crea el movimiento de stock
-                                StockMovement.Dao.DeleteByDeliveryNoteDetailId(productId, deliveryNoteId);
-                                StockMovement stockMovement = new StockMovement
+                                else if (oldStateId == 3)
                                 {
-                                    DateStockMovement = deliveryNote.Date.Date,
-                                    DeliveryNoteDetail_Product_Id = productId,
-                                    DeliveryNoteDetail_DeliveryNote_Id = deliveryNoteId,
-                                    Stock = product.Stock,
-                                    User = wm.User
-                                };
-                                StockMovement.Dao.SaveStockMovement(stockMovement);
+                                    if (quantity > existingDetail.Quantity)
+                                    {
+                                        var diff = quantity - existingDetail.Quantity;
+                                        product.Stock.Quantity += diff;
+                                        product.Stock.Save();
+                                        if (product.Stock.Quantity <= 5)
+                                            product.StateProduct = new StateProduct { Id = 4 };
+                                        else
+                                            product.StateProduct = new StateProduct { Id = 1 };
+                                        product.Save();
+                                        DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(existingDetail.DeliveryNote.Id, existingDetail.Product.Id);
+                                        var detail = new DeliveryNoteDetail
+                                        {
+                                            DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                            Product = product,
+                                            Quantity = quantity,
+                                            Code = "Active"
+                                        };
+                                        detail.Save();
+                                    } 
+                                    else if (quantity < existingDetail.Quantity)
+                                    {
+                                        var diff = existingDetail.Quantity - quantity;
+                                        if (product.Stock.Quantity < diff)
+                                        {
+                                            TempData["Alert"] = "El stock no es suficiente para realizar esta operación.";
+                                            return RedirectToAction("Index");
+                                        }
+                                        product.Stock.Quantity -= diff;
+                                        product.Stock.Save();
+                                        if (product.Stock.Quantity <= 5)
+                                            product.StateProduct = new StateProduct { Id = 4 };
+                                        else
+                                            product.StateProduct = new StateProduct { Id = 1 };
+                                        product.Save();
+                                        DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(existingDetail.DeliveryNote.Id, existingDetail.Product.Id);
+                                        var detail = new DeliveryNoteDetail
+                                        {
+                                            DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                            Product = product,
+                                            Quantity = quantity,
+                                            Code = "Active"
+                                        };
+                                        detail.Save();
+                                    } 
+                                    else
+                                    {
+                                        product.Stock.Quantity += quantity;
+                                        product.Stock.Save();
+                                        if (product.Stock.Quantity <= 5)
+                                            product.StateProduct = new StateProduct { Id = 4 };
+                                        else
+                                            product.StateProduct = new StateProduct { Id = 1 };
+                                        product.Save();
+                                    }
+                                    StockMovement.Dao.DeleteByDeliveryNoteDetailId(productId, deliveryNoteId);
+                                    StockMovement stockMovement = new StockMovement
+                                        {
+                                            DateStockMovement = deliveryNote.Date.Date,
+                                            DeliveryNoteDetail_Product_Id = productId,
+                                            DeliveryNoteDetail_DeliveryNote_Id = deliveryNoteId,
+                                            Stock = product.Stock,
+                                            User = wm.User
+                                        };
+                                    StockMovement.Dao.SaveStockMovement(stockMovement);
+                                } 
+                                else if (oldStateId == 1) 
+                                {
+                                    if (quantity != existingDetail.Quantity)
+                                    {
+                                        DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(existingDetail.DeliveryNote.Id, existingDetail.Product.Id);
+                                        var detail = new DeliveryNoteDetail
+                                        {
+                                            DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                            Product = product,
+                                            Quantity = quantity,
+                                            Code = "Active"
+                                        };
+                                        detail.Save();
+                                        product.Stock.Quantity += quantity;
+                                        product.Stock.Save();
+                                        if (product.Stock.Quantity <= 5)
+                                            product.StateProduct = new StateProduct { Id = 4 };
+                                        else
+                                            product.StateProduct = new StateProduct { Id = 1 };
+                                        product.Save();
+                                    }
+                                    StockMovement.Dao.DeleteByDeliveryNoteDetailId(productId, deliveryNoteId);
+                                    StockMovement stockMovement = new StockMovement
+                                    {
+                                        DateStockMovement = deliveryNote.Date.Date,
+                                        DeliveryNoteDetail_Product_Id = productId,
+                                        DeliveryNoteDetail_DeliveryNote_Id = deliveryNoteId,
+                                        Stock = product.Stock,
+                                        User = wm.User
+                                    };
+                                    StockMovement.Dao.SaveStockMovement(stockMovement);
+
+                                }
+
                             }
                             else
                             {
@@ -574,20 +719,7 @@ namespace DepositControl.Controllers
                     {
                         foreach (var detail in existingDetails)
                         {
-                            StockMovement.Dao.DeleteByDeliveryNoteDetailId(detail.Product.Id, detail.DeliveryNote.Id);
                             DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(detail.DeliveryNote.Id, detail.Product.Id);
-                        }
-                    }
-                    // Otros casos: actualizar detalles y movimientos, pero no tocar stock
-                    else
-                    {
-                        foreach (var detail in existingDetails)
-                        {
-                            if (!currentProductIds.Contains(detail.Product.Id))
-                            {
-                                StockMovement.Dao.DeleteByDeliveryNoteDetailId(detail.Product.Id, detail.DeliveryNote.Id);
-                                DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(detail.DeliveryNote.Id, detail.Product.Id);
-                            }
                         }
                         foreach (var kvp in currentQuantities)
                         {
@@ -600,16 +732,6 @@ namespace DepositControl.Controllers
                             {
                                 existingDetail.Quantity = newQuantity;
                                 existingDetail.Save();
-                                StockMovement.Dao.DeleteByDeliveryNoteDetailId(productId, deliveryNoteId);
-                                StockMovement stockMovement = new StockMovement
-                                {
-                                    DateStockMovement = deliveryNote.Date.Date,
-                                    DeliveryNoteDetail_Product_Id = productId,
-                                    DeliveryNoteDetail_DeliveryNote_Id = deliveryNoteId,
-                                    Stock = product.Stock,
-                                    User = wm.User
-                                };
-                                StockMovement.Dao.SaveStockMovement(stockMovement);
                             }
                             else
                             {
@@ -621,19 +743,158 @@ namespace DepositControl.Controllers
                                     Code = "Active"
                                 };
                                 detail.Save();
-                                StockMovement stockMovement = new StockMovement
-                                {
-                                    DateStockMovement = deliveryNote.Date.Date,
-                                    DeliveryNoteDetail_Product_Id = detail.Product.Id,
-                                    DeliveryNoteDetail_DeliveryNote_Id = detail.DeliveryNote.Id,
-                                    Stock = product.Stock,
-                                    User = wm.User
-                                };
-                                StockMovement.Dao.SaveStockMovement(stockMovement);
                             }
                         }
                     }
+                    // Otros casos: actualizar detalles y movimientos, pero no tocar stock
+                    else
+                    {
+                        if(oldStateId == 2 && newStateId != 2) // el admin cambiar de recibido a cualquier otro estado
+                        {
+                            foreach (var detail in existingDetails)
+                            {
+                                var product = Product.Dao.Get(detail.Product.Id);
+                                if (product.Stock.Quantity < detail.Quantity)
+                                {
+                                    TempData["Alert"] = "El stock no es suficiente para realizar esta operación.";
+                                    return RedirectToAction("Index");
+                                }
+                                product.Stock.Quantity -= detail.Quantity;
+                                product.Stock.Save();
+                                if (product.Stock.Quantity <= 5)
+                                    product.StateProduct = new StateProduct { Id = 4 };
+                                else
+                                    product.StateProduct = new StateProduct { Id = 1 };
+                                product.Save();
+                                StockMovement.Dao.DeleteByDeliveryNoteDetailId(detail.Product.Id, detail.DeliveryNote.Id);
+                                if (!currentProductIds.Contains(detail.Product.Id))
+                                {
+                                    DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(detail.DeliveryNote.Id, detail.Product.Id);
+                                }
+                            }
+                            if (file != null && file.ContentLength > 0)
+                            {
+                                var extension = Path.GetExtension(file.FileName).ToLower();
+                                if (extension != ".pdf")
+                                {
+                                    ViewBag.Alert = "Solo se permiten archivos PDF.";
+                                    FillDropdowns();
+                                    return View(deliveryNote);
+                                }
 
+                                if (file.ContentLength > 1048576)
+                                {
+                                    ViewBag.Alert = "El archivo no puede superar los 1 MB.";
+                                    FillDropdowns();
+                                    return View(deliveryNote);
+                                }
+
+                                byte[] fileData;
+                                using (var binaryReader = new BinaryReader(file.InputStream))
+                                {
+                                    fileData = binaryReader.ReadBytes(file.ContentLength);
+                                }
+
+                                deliveryNote.FileDeliveryNote = Convert.ToBase64String(fileData);
+                            }
+                            foreach (var kvp in currentQuantities)
+                            {
+                                long productId = kvp.Key;
+                                int newQuantity = kvp.Value;
+                                var product = Product.Dao.Get(productId);
+                                var existingDetail = existingDetails.FirstOrDefault(d => d.Product.Id == productId);
+
+                                if (existingDetail != null)
+                                {
+                                    existingDetail.Quantity = newQuantity;
+                                    existingDetail.Save();
+                                }
+                                else
+                                {
+                                    var detail = new DeliveryNoteDetail
+                                    {
+                                        DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                        Product = product,
+                                        Quantity = newQuantity,
+                                        Code = "Active"
+                                    };
+                                    detail.Save();
+                                }
+                            }
+                            deliveryNote.Date = Convert.ToDateTime(collection["Date"]).Date;
+                            deliveryNote.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
+                            string input = collection["Number"];
+                            if (!string.IsNullOrEmpty(input) && input.All(char.IsDigit) && input.Length <= 8)
+                            {
+                                string fullNumber = input.PadLeft(8, '0');
+
+                                if (deliveryNote.Number != fullNumber)
+                                {
+                                    var allDeliveryNotes = DeliveryNote.Dao.GetAll();
+                                    bool exists = allDeliveryNotes.Any(dn => dn.Number == fullNumber);
+
+                                    if (exists)
+                                    {
+                                        ViewBag.Alert = "El número ya está registrado.";
+                                        FillDropdowns();
+                                        return View(deliveryNote);
+                                    }
+                                    else
+                                    {
+                                        deliveryNote.Number = fullNumber;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.Alert = "El número debe contener solo dígitos numéricos y tener hasta 8 caracteres.";
+                            }
+                            deliveryNote.StateDeliveryNote = new StateDeliveryNote { Id = long.Parse(collection["StateDeliveryNote.Id"]) };
+                            deliveryNote.WarehouseManager = new WarehouseManager { Id = wm.Id };
+                            deliveryNote.Save();
+
+                            TempData["Success"] = "Se ha editado correctamente";
+                            return RedirectToAction("Index");
+
+                        }
+                        // de rechazado a pendiente
+                        else
+                        {
+                            foreach (var detail in existingDetails)
+                            {
+                                if (!currentProductIds.Contains(detail.Product.Id))
+                                {
+                                    StockMovement.Dao.DeleteByDeliveryNoteDetailId(detail.Product.Id, detail.DeliveryNote.Id);
+                                    DeliveryNoteDetail.Dao.DeleteByDeliveryNoteDetailId(detail.DeliveryNote.Id, detail.Product.Id);
+                                }
+                            }
+                            foreach (var kvp in currentQuantities)
+                            {
+                                long productId = kvp.Key;
+                                int newQuantity = kvp.Value;
+                                var product = Product.Dao.Get(productId);
+                                var existingDetail = existingDetails.FirstOrDefault(d => d.Product.Id == productId);
+
+                                if (existingDetail != null)
+                                {
+                                    existingDetail.Quantity = newQuantity;
+                                    existingDetail.Save();
+                                }
+                                else
+                                {
+                                    var detail = new DeliveryNoteDetail
+                                    {
+                                        DeliveryNote = new DeliveryNote { Id = deliveryNoteId },
+                                        Product = product,
+                                        Quantity = newQuantity,
+                                        Code = "Active"
+                                    };
+                                    detail.Save();
+                                }
+                            }
+                        }
+                            
+                    }
                     deliveryNote.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
                     deliveryNote.StateDeliveryNote = new StateDeliveryNote { Id = newStateId };
                     deliveryNote.WarehouseManager = new WarehouseManager { Id = wm.Id };
@@ -680,21 +941,50 @@ namespace DepositControl.Controllers
             {
                 List<DeliveryNote> list = new List<DeliveryNote>();
                 DeliveryNote deliveryNote = DeliveryNote.Dao.Get(id);
+                deliveryNote.DeliveryNoteDetails = DeliveryNoteDetail.Dao.GetDetailsByDeliveryNoteId(id);
                 list.Add(deliveryNote);
                 list.LoadRelation(dn => dn.StateDeliveryNote);
-                if(deliveryNote.StateDeliveryNote.Id == 2 || deliveryNote.StateDeliveryNote.Id == 3)
+                bool isAdmin = IsAdmin();
+                int stateId = (int)deliveryNote.StateDeliveryNote.Id;
+                if ((stateId == 2 || stateId == 3) && !isAdmin)
                 {
-                    TempData["Alert"] = "No se puede eliminar un remito que ya fue recibido o rechazado.";
+                    TempData["Alert"] = "No se puede eliminar un remito recibido o rechazado si no es administrador.";
                     return RedirectToAction("Index");
                 }
-                deliveryNote.Code = "Inactive";
-                deliveryNote.DeliveryNoteDetails = DeliveryNoteDetail.Dao.GetDetailsByDeliveryNoteId(id);
                 foreach (var detail in deliveryNote.DeliveryNoteDetails)
                 {
+                    // Si está en estado 2 y es admin, eliminar movimientos y disminuir stock
+                    if (stateId == 2 && isAdmin)
+                    {
+                        var product = Product.Dao.Get(detail.Product.Id);
+                        if (product != null)
+                        {
+                            if (product.Stock.Quantity>= detail.Quantity)
+                            {
+                                product.Stock.Quantity -= detail.Quantity;
+                                product.Stock.Save();
+                                if (product.Stock.Quantity <= 5)
+                                    product.StateProduct = new StateProduct { Id = 4 };
+                                else
+                                    product.StateProduct = new StateProduct { Id = 1 };
+                                product.Save();
+                            } else
+                            {
+                                TempData["Alert"] = "No se puede eliminar un remito recibido sin stock de respaldo.";
+                                return RedirectToAction("Index");
+                            }
+                            
+                        }
+                        StockMovement.Dao.DeleteByDeliveryNoteDetailId(detail.Product.Id, deliveryNote.Id);
+                    }
+
                     detail.Code = "Inactive";
                     detail.Save();
                 }
+
+                deliveryNote.Code = "Inactive";
                 deliveryNote.Save();
+
                 TempData["Success"] = "Se ha eliminado correctamente";
                 return RedirectToAction("Index");
             }

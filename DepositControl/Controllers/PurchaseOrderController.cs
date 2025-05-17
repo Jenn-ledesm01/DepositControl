@@ -70,6 +70,13 @@ namespace DepositControl.Controllers
             ViewBag.ProductPrices = productsPrices;
         }
 
+        private bool IsAdmin()
+        {
+            long userId = long.Parse(Session["User"].ToString());
+            var userProfile = UserProfile.Dao.GetByFilter(new { User_Id = userId }).FirstOrDefault();
+            return userProfile != null && userProfile.Profile.Id == 1;
+        }
+
         // GET: PurchaseOrder/Index
         [AccessCode("PurchaseOrder")]
         [Authenticated]
@@ -78,7 +85,7 @@ namespace DepositControl.Controllers
             try
             {
                 var filters = new { Code = "Active", Date = dateFilter, StatePurchaseOrder_Id = stateFilter, Number = numero };
-                List<PurchaseOrder> purchaseOrders = PurchaseOrder.Dao.GetByFilter(new { filters }).ToList();
+                List<PurchaseOrder> purchaseOrders = PurchaseOrder.Dao.GetByFilter(filters).ToList();
                 purchaseOrders.LoadRelation(po => po.StatePurchaseOrder);
                 purchaseOrders.LoadRelation(po => po.SalePoint);
 
@@ -228,6 +235,28 @@ namespace DepositControl.Controllers
                         };
                         wm.Save();
                     }
+                    int index = 0;
+                    while (true)
+                    {
+                        string prefix = $"Details[{index}]";
+                        if (collection[$"{prefix}.Product"] == null)
+                            break;
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Product"]))
+                            throw new Exception("Debe seleccionar al menos un producto.");
+
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Quantity"]))
+                            throw new Exception("La cantidad no puede ser cero.");
+
+                        long productId = long.Parse(collection[$"{prefix}.Product"]);
+                        int quantity = Convert.ToInt32(collection[$"{prefix}.Quantity"]);
+                        Product fullProduct = Product.Dao.Get(productId);
+                        if (fullProduct == null)
+                            throw new Exception($"El producto con ID {productId} no se encontró.");
+                        if (fullProduct.Stock == null || fullProduct.Stock.Quantity < quantity)
+                            throw new Exception($"Stock insuficiente para el producto {fullProduct.Name}. Solo hay {fullProduct.Stock?.Quantity ?? 0} unidades disponibles.");
+
+                        index++;
+                    }
 
                     purchaseOrder.Date = Convert.ToDateTime(collection["Date"]).Date;
                     purchaseOrder.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
@@ -258,27 +287,21 @@ namespace DepositControl.Controllers
                         FillDropdowns();
                         return View(purchaseOrder);
                     }
+                    purchaseOrder.StatePurchaseOrder = new StatePurchaseOrder { Id = long.Parse(collection["StatePurchaseOrder"]) };
+                    purchaseOrder.WarehouseManager = new WarehouseManager { Id = wm.Id };
+                    purchaseOrder.SalePoint = new SalePoint { Id = long.Parse(collection["SalePoint"]) };
+                    purchaseOrder.Save();
 
                     long stateId = long.Parse(collection["StatePurchaseOrder"]);
-                    int index = 0;
+                    index = 0;
                     while (true)
                     {
                         string prefix = $"Details[{index}]";
                         if (collection[$"{prefix}.Product"] == null)
                             break;
-
                         long productId = long.Parse(collection[$"{prefix}.Product"]);
                         int quantity = Convert.ToInt32(collection[$"{prefix}.Quantity"]);
-                        if (quantity == 0)
-                        {
-                            throw new Exception($"La cantidad no puede ser cero.");
-                        }
                         Product fullProduct = Product.Dao.Get(productId);
-                        if (fullProduct == null)
-                            throw new Exception($"El producto con ID {productId} no se encontró.");
-                        if (fullProduct.Stock == null || fullProduct.Stock.Quantity < quantity)
-                            throw new Exception($"Stock insuficiente para el producto {fullProduct.Name}. Solo hay {fullProduct.Stock?.Quantity ?? 0} unidades disponibles.");
-                        
                         PurchaseOrderDetail detail = new PurchaseOrderDetail
                         {
                             Product = fullProduct,
@@ -313,11 +336,6 @@ namespace DepositControl.Controllers
 
                         index++;
                     }
-
-                    purchaseOrder.StatePurchaseOrder = new StatePurchaseOrder { Id = long.Parse(collection["StatePurchaseOrder"]) };
-                    purchaseOrder.WarehouseManager = new WarehouseManager { Id = wm.Id };
-                    purchaseOrder.SalePoint = new SalePoint { Id = long.Parse(collection["SalePoint"]) };
-                    purchaseOrder.Save();
 
                     TempData["Success"] = "Se ha creado correctamente";
                     return RedirectToAction("Index");
@@ -360,6 +378,7 @@ namespace DepositControl.Controllers
             {
                 item.PurchaseOrderDetails.LoadRelation(pd => pd.Product);
             }
+            ViewBag.IsAdmin = IsAdmin();
             return View(purchaseOrder);
         }
 
@@ -407,7 +426,7 @@ namespace DepositControl.Controllers
                         FillDropdowns();
                         return View(new PurchaseOrder());
                     }
-
+                    ViewBag.IsAdmin = IsAdmin();
                     long newStateId = long.Parse(collection["StatePurchaseOrder.Id"]);
                     long oldStateId = purchaseOrder.StatePurchaseOrder.Id;
 
@@ -422,13 +441,13 @@ namespace DepositControl.Controllers
                         string prefix = $"Details[{index}]";
                         if (collection[$"{prefix}.Product"] == null)
                             break;
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Product"]))
+                            throw new Exception("Debe seleccionar al menos un producto.");
 
+                        if (string.IsNullOrEmpty(collection[$"{prefix}.Quantity"]))
+                            throw new Exception("La cantidad no puede ser cero.");
                         long productId = long.Parse(collection[$"{prefix}.Product"]);
                         int quantity = Convert.ToInt32(collection[$"{prefix}.Quantity"]);
-                        if (quantity == 0)
-                        {
-                            throw new Exception($"La cantidad no puede ser cero.");
-                        }
                         var product = Product.Dao.Get(productId);
                         if (product == null)
                             throw new Exception($"El producto con ID {productId} no se encontró.");
@@ -451,10 +470,130 @@ namespace DepositControl.Controllers
                         index++;
                     }
 
+                    // De Cancelada/Rechazada a Pendiente/Entregada: descontar stock y crear movimientos
+                    if ((oldStateId == 3 || oldStateId == 4) && (newStateId == 1 || newStateId == 2))
+                    {
+                        foreach (var detail in existingDetails)
+                        {
+                            PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(purchaseOrderId, detail.Product.Id);
+                        }
+                        foreach (var kvp in currentQuantities)
+                        {
+                            long productId = kvp.Key;
+                            int newQuantity = kvp.Value;
+                            var product = Product.Dao.Get(productId);
 
+                            var existingDetail = existingDetails.FirstOrDefault(d => d.Product.Id == productId);
+                            if (existingDetail == null)
+                            {
+                                if (product.Stock.Quantity < newQuantity)
+                                {
+                                    TempData["Alert"] = "El stock no es suficiente para realizar esta operación.";
+                                    return RedirectToAction("Index");
+                                }
+                                var detail = new PurchaseOrderDetail
+                                {
+                                    PurchaseOrder = new PurchaseOrder { Id = purchaseOrderId },
+                                    Product = product,
+                                    Quantity = newQuantity,
+                                    Code = "Active"
+                                };
+                                detail.Save();
+                                product.Stock.Quantity -= newQuantity;
+                                product.Stock.Save();
+                            }
+                            else 
+                            {
+                                if (product.Stock.Quantity < newQuantity)
+                                {
+                                    TempData["Alert"] = "El stock no es suficiente para realizar esta operación.";
+                                    return RedirectToAction("Index");
+                                }
+                                existingDetail.Quantity = newQuantity;
+                                existingDetail.Save();
+                                product.Stock.Quantity -= newQuantity;
+                                product.Stock.Save();
+                                PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(purchaseOrderId, productId);
+                                var detail = new PurchaseOrderDetail
+                                {
+                                    PurchaseOrder = new PurchaseOrder { Id = purchaseOrderId },
+                                    Product = product,
+                                    Quantity = newQuantity,
+                                    Code = "Active"
+                                };
+                                detail.Save();
+                            }
+                            if (product.Stock.Quantity <= 5)
+                                product.StateProduct = new StateProduct { Id = 4 };
+                            else
+                                product.StateProduct = new StateProduct { Id = 1 };
+                            product.Save();
+                            StockMovement stockMovement = new StockMovement
+                            {
+                                DateStockMovement = purchaseOrder.Date.Date,
+                                PurchaseOrderDetail_Product_Id = productId,
+                                PurchaseOrderDetail_PurchaseOrder_Id = purchaseOrderId,
+                                Stock = product.Stock,
+                                User = wm.User
+                            };
+                            StockMovement.Dao.SaveStockMovement(stockMovement);
+                        }
+                    }
+                    // De Pendiente/Entregada a Cancelada/Rechazada: sumar stock y eliminar movimientos
+                    else if ((oldStateId == 1 || oldStateId == 2 ) && (newStateId == 3 || newStateId == 4))
+                    {
+                        foreach (var detail in existingDetails)
+                        {
+                            var prod = Product.Dao.Get(detail.Product.Id);
+                            prod.Stock.Quantity += detail.Quantity;
+                            prod.Stock.Save();
+                            if (prod.Stock.Quantity <= 5)
+                                prod.StateProduct = new StateProduct { Id = 4 };
+                            else
+                                prod.StateProduct = new StateProduct { Id = 1 };
+                            prod.Save();
+                            if (!currentProductIds.Contains(detail.Product.Id))
+                            {
+                                PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(detail.PurchaseOrder.Id, detail.Product.Id);
+                            }
+                            StockMovement.Dao.DeleteByPurchaseOrderDetailId(detail.Product.Id, detail.PurchaseOrder.Id);
 
-                    // Si pasa a Entregada (Id=2) y antes no estaba en 2 => disminuir stock y crear movimientos
-                    if (newStateId == 1 || newStateId == 2)
+                        }
+                        foreach (var kvp in currentQuantities)
+                        {
+                            long productId = kvp.Key;
+                            int newQuantity = kvp.Value;
+                            var product = Product.Dao.Get(productId);
+                            var existingDetail = existingDetails.FirstOrDefault(d => d.Product.Id == productId);
+                            if (existingDetail == null)
+                            {
+                                var detail = new PurchaseOrderDetail
+                                {
+                                    PurchaseOrder = new PurchaseOrder { Id = purchaseOrderId },
+                                    Product = product,
+                                    Quantity = newQuantity,
+                                    Code = "Active"
+                                };
+                                detail.Save();
+                            }
+                            else
+                            {
+                                existingDetail.Quantity = newQuantity;
+                                existingDetail.Save();
+                                PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(purchaseOrderId, productId);
+                                var detail = new PurchaseOrderDetail
+                                {
+                                    PurchaseOrder = new PurchaseOrder { Id = purchaseOrderId },
+                                    Product = product,
+                                    Quantity = newQuantity,
+                                    Code = "Active"
+                                };
+                                detail.Save();
+                            }
+                        }
+                    }
+                    // Si pasa a Pendiente o Entregada (edición normal)
+                    else if (newStateId == 1 || newStateId == 2)
                     {
                         foreach (var detail in existingDetails)
                         {
@@ -468,7 +607,6 @@ namespace DepositControl.Controllers
                                 else
                                     prod.StateProduct = new StateProduct { Id = 1 };
                                 prod.Save();
-
                                 StockMovement.Dao.DeleteByPurchaseOrderDetailId(detail.Product.Id, detail.PurchaseOrder.Id);
                                 PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(detail.PurchaseOrder.Id, detail.Product.Id);
                             }
@@ -482,11 +620,23 @@ namespace DepositControl.Controllers
 
                             if (existingDetail != null)
                             {
-                                int oldQuantity = existingDetail.Quantity;
-                                int diff = newQuantity - oldQuantity;
-                                if (diff != 0)
+                                if (newQuantity > existingDetail.Quantity)
                                 {
+                                    if (product.Stock.Quantity < newQuantity)
+                                    {
+                                        TempData["Alert"] = "El stock no es suficiente para realizar esta operación.";
+                                        return RedirectToAction("Index");
+                                    }
+                                    int diff = newQuantity - existingDetail.Quantity;
                                     product.Stock.Quantity -= diff;
+                                    product.Stock.Save();
+                                    existingDetail.Quantity = newQuantity;
+                                    existingDetail.Save();
+                                }
+                                else if (existingDetail.Quantity > newQuantity)
+                                {
+                                    int diff = existingDetail.Quantity - newQuantity;
+                                    product.Stock.Quantity += diff;
                                     product.Stock.Save();
                                     existingDetail.Quantity = newQuantity;
                                     existingDetail.Save();
@@ -534,20 +684,46 @@ namespace DepositControl.Controllers
                             product.Save();
                         }
                     }
-                    // Si cambia de Pendiente (1) a Cancelada (3) o Rechazada (4): revertir stock y eliminar movimientos
-                    else if (oldStateId == 1 && (newStateId == 3 || newStateId == 4))
+                    else if (newStateId == 3 || newStateId == 4)
                     {
                         foreach (var detail in existingDetails)
+                        { 
+                            if (!currentProductIds.Contains(detail.Product.Id))
+                            {
+                                PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(detail.PurchaseOrder.Id, detail.Product.Id);
+                            }
+                        }
+                        foreach (var kvp in currentQuantities)
                         {
-                            var prod = Product.Dao.Get(detail.Product.Id);
-                            prod.Stock.Quantity += detail.Quantity;
-                            prod.Stock.Save();
-                            if (prod.Stock.Quantity <= 5)
-                                prod.StateProduct = new StateProduct { Id = 4 };
+                            long productId = kvp.Key;
+                            int newQuantity = kvp.Value;
+                            var product = Product.Dao.Get(productId);
+                            var existingDetail = existingDetails.FirstOrDefault(d => d.Product.Id == productId);
+                            if (existingDetail == null)
+                            {
+                                var detail = new PurchaseOrderDetail
+                                {
+                                    PurchaseOrder = new PurchaseOrder { Id = purchaseOrderId },
+                                    Product = product,
+                                    Quantity = newQuantity,
+                                    Code = "Active"
+                                };
+                                detail.Save();
+                            }
                             else
-                                prod.StateProduct = new StateProduct { Id = 1 };
-                            prod.Save();
-                            StockMovement.Dao.DeleteByPurchaseOrderDetailId(detail.Product.Id, detail.PurchaseOrder.Id);
+                            {
+                                existingDetail.Quantity = newQuantity;
+                                existingDetail.Save();
+                                PurchaseOrderDetail.Dao.DeleteByPurchaseOrderDetailId(purchaseOrderId, productId);
+                                var detail = new PurchaseOrderDetail
+                                {
+                                    PurchaseOrder = new PurchaseOrder { Id = purchaseOrderId },
+                                    Product = product,
+                                    Quantity = newQuantity,
+                                    Code = "Active"
+                                };
+                                detail.Save();
+                            }
                         }
                     }
                     purchaseOrder.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
@@ -583,21 +759,42 @@ namespace DepositControl.Controllers
             {
                 List<PurchaseOrder> list = new List<PurchaseOrder>();
                 PurchaseOrder purchaseOrder = PurchaseOrder.Dao.Get(id);
+                purchaseOrder.PurchaseOrderDetails = PurchaseOrderDetail.Dao.GetDetailsByPurchaseOrderId(id);
                 list.Add(purchaseOrder);
                 list.LoadRelation(po => po.StatePurchaseOrder);
-                if(purchaseOrder.StatePurchaseOrder.Id == 2 || purchaseOrder.StatePurchaseOrder.Id == 3 || purchaseOrder.StatePurchaseOrder.Id == 4)
+                bool isAdmin = IsAdmin();
+                int stateId = (int)purchaseOrder.StatePurchaseOrder.Id;
+                if (!isAdmin && (stateId == 2 || stateId == 3 || stateId == 4))
                 {
                     TempData["Alert"] = "No se puede eliminar una órden de compra que ya fue entregada, cancelada o rechazada.";
                     return RedirectToAction("Index");
                 }
-                purchaseOrder.Code = "Inactive";
-                purchaseOrder.PurchaseOrderDetails= PurchaseOrderDetail.Dao.GetDetailsByPurchaseOrderId(id);
                 foreach (var detail in purchaseOrder.PurchaseOrderDetails)
                 {
+                    StockMovement.Dao.DeleteByPurchaseOrderDetailId(detail.Product.Id, purchaseOrder.Id);
+                    // Si está en pendiente o entregada, aumentar stock
+                    if ((stateId == 1 || stateId == 2) && isAdmin)
+                    {
+                        var product = Product.Dao.Get(detail.Product.Id);
+                        if (product != null)
+                        {
+                            product.Stock.Quantity += detail.Quantity;
+                            product.Stock.Save();
+                            if (product.Stock.Quantity <= 5)
+                                product.StateProduct = new StateProduct { Id = 4 };
+                            else
+                                product.StateProduct = new StateProduct { Id = 1 };
+                            product.Save();
+                        }
+                    }
+                    // Si está en cancelada o rechazada
                     detail.Code = "Inactive";
                     detail.Save();
                 }
+
+                purchaseOrder.Code = "Inactive";
                 purchaseOrder.Save();
+
                 TempData["Success"] = "Se ha eliminado correctamente";
                 return RedirectToAction("Index");
             }

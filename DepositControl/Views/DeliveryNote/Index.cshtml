@@ -52,6 +52,13 @@
             <strong>¡Éxito!</strong> @TempData["Success"]
         </div>
     }
+    @if (TempData["Alert"] != null)
+    {
+        <div class="alert alert-dismissable alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error!</strong> @TempData["Alert"]
+        </div>
+    }
     <div>
         <h1><b>Remitos</b></h1>
         <br />
