@@ -26,6 +26,8 @@ namespace DepositControl.Bussines
         public string DeliveryNote_Number { get; set; }
 
         public string PurchaseOrder_Number { get; set; }
+
+        public string Estado { get; set; }
         public List<StockMovementDTO> GetStockMovement()
         {
             List<StockMovementDTO> stockMovements = new List<StockMovementDTO>();
@@ -57,7 +59,8 @@ namespace DepositControl.Bussines
                         PurchaseOrder_Id = reader["PurchaseOrder_Id"] as int?,
                         DeliveryNote_Id = reader["DeliveryNote_Id"] as int?,
                         PurchaseOrder_Number = reader["PurchaseOrder_Number"] as string,
-                        DeliveryNote_Number = reader["DeliveryNote_Number"] as string
+                        DeliveryNote_Number = reader["DeliveryNote_Number"] as string,
+                        Estado = reader["Estado"] as string
                     });
                 }
 

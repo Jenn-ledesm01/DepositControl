@@ -51,7 +51,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Number, "Número", new { @class = "control-label col-sm-1", @style = "text-align:left;" })
                 <div class="col-sm-3">
-                    @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", placeholder = "Ingrese el número de la Órden de compra" })
+                    @Html.TextBoxFor(model => model.Number, new { @class = "form-control", maxlength = "8", @readonly = "readonly" })
                     @Html.ValidationMessageFor(model => model.Number, "", new { @class = "text-danger" })
                 </div>
             </div>

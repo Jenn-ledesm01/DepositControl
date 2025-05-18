@@ -90,6 +90,7 @@
                         <th style="text-align:left;">Fecha</th>
                         <th style="text-align:left;">Tipo Movimiento</th>
                         <th style="text-align:left;">Número</th>
+                        <th style="text-align:left;">Estado</th>
                         <th style="text-align:left;">Jefe de Depósito</th>
                         <th style="text-align:left;">Producto</th>
                         <th style="text-align:left;">Cantidad</th>
@@ -100,10 +101,10 @@
                     @foreach (var item in Model.OrderByDescending(sm => sm.FechaMovimiento))
                     {
                         <tr>
-                            <td style="text-align:left; width:10%;">
+                            <td style="text-align:left; width:8%;">
                                 @item.FechaMovimiento.ToString("dd/MM/yyyy")
                             </td>
-                            <td style="text-align:left; width:20%;">
+                            <td style="text-align:left; width:15%;">
                                 @{
                                     var tipo = item.Origen ?? "Sin Movimiento";
                                     if (tipo == "Orden de Compra")
@@ -145,7 +146,10 @@
                                     }
                                 }
                             </td>
-                            <td style="text-align:left; width:20%;">
+                            <td style="text-align:left; width:15%;">
+                                @(item.Estado)
+                            </td>
+                            <td style="text-align:left; width:15%;">
                                 @(item.User_FullName ?? "Sin Responsable")
                             </td>
                             <td style="text-align:left; width:20%;">

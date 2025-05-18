@@ -37,8 +37,7 @@ namespace DepositControl.Controllers
             allProducts.LoadRelation(p => p.StateProduct);
             var filteredProducts = allProducts.Where(p =>
                 p.StateProduct.Name == "Activo" ||
-                p.StateProduct.Name == "Bajo Stock" ||
-                p.StateProduct.Name == "Defectuoso").ToList();
+                p.StateProduct.Name == "Bajo Stock").ToList();
 
             foreach (var product in filteredProducts)
             {
@@ -84,7 +83,13 @@ namespace DepositControl.Controllers
         {
             try
             {
-                var filters = new { Code = "Active", Date = dateFilter, StatePurchaseOrder_Id = stateFilter, Number = numero };
+                var filters = new 
+                { 
+                    Code = IsAdmin() ? null : "Active",
+                    Date = dateFilter, 
+                    StatePurchaseOrder_Id = stateFilter, 
+                    Number = numero 
+                };
                 List<PurchaseOrder> purchaseOrders = PurchaseOrder.Dao.GetByFilter(filters).ToList();
                 purchaseOrders.LoadRelation(po => po.StatePurchaseOrder);
                 purchaseOrders.LoadRelation(po => po.SalePoint);
@@ -137,7 +142,7 @@ namespace DepositControl.Controllers
 
                 var filters = new
                 {
-                    Code = "Active",
+                    Code = IsAdmin() ? null : "Active",
                     Date = dateFilter,
                     StatePurchaseOrder_Id = stateId,
                     Number = number
@@ -202,7 +207,23 @@ namespace DepositControl.Controllers
             ViewBag.stateList = statePurchaseOrderList;
             ViewBag.ProductList = productList;
             ViewBag.SalePointList = salePointList;
-            return View();
+            var purchaseOrder = new PurchaseOrder();
+            var allPurchaseOrders = PurchaseOrder.Dao.GetAll()
+                                            .Where(po => !string.IsNullOrEmpty(po.Number) && po.Number.All(char.IsDigit))
+                                            .ToList();
+
+            int nextNumber = 1;
+            if (allPurchaseOrders.Any())
+            {
+                int lastNumber = allPurchaseOrders
+                    .Select(po => int.Parse(po.Number))
+                    .OrderByDescending(n => n)
+                    .FirstOrDefault();
+
+                nextNumber = lastNumber + 1;
+            }
+            purchaseOrder.Number = nextNumber.ToString().PadLeft(8, '0');
+            return View(purchaseOrder);
         }
 
         // POST: PurchaseOrder/Create
@@ -262,31 +283,21 @@ namespace DepositControl.Controllers
                     purchaseOrder.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
                     purchaseOrder.Code = "Active";
                     purchaseOrder.Order = PurchaseOrder.Dao.GetLastOrder() + 1;
-                    string input = collection["Number"];
-                    if (!string.IsNullOrEmpty(input) && input.All(char.IsDigit) && input.Length <= 8)
-                    {
-                        string fullNumber = input.PadLeft(8, '0');
+                    var allPurchaseOrders = PurchaseOrder.Dao.GetAll()
+                                            .Where(po => !string.IsNullOrEmpty(po.Number) && po.Number.All(char.IsDigit))
+                                            .ToList();
 
-                        var allPurchaseOrders = PurchaseOrder.Dao.GetAll();
-                        bool exists = allPurchaseOrders.Any(dn => dn.Number == fullNumber);
-
-                        if (exists)
-                        {
-                            ViewBag.Alert = "El número ya está registrado.";
-                            FillDropdowns();
-                            return View(purchaseOrder);
-                        }
-                        else
-                        {
-                            purchaseOrder.Number = fullNumber;
-                        }
-                    }
-                    else
+                    int nextNumber = 1;
+                    if (allPurchaseOrders.Any())
                     {
-                        ViewBag.Alert = "El número debe contener solo dígitos numéricos y tener hasta 8 caracteres.";
-                        FillDropdowns();
-                        return View(purchaseOrder);
+                        int lastNumber = allPurchaseOrders
+                            .Select(po => int.Parse(po.Number))
+                            .OrderByDescending(n => n)
+                            .FirstOrDefault();
+
+                        nextNumber = lastNumber + 1;
                     }
+                    purchaseOrder.Number = nextNumber.ToString().PadLeft(8, '0');
                     purchaseOrder.StatePurchaseOrder = new StatePurchaseOrder { Id = long.Parse(collection["StatePurchaseOrder"]) };
                     purchaseOrder.WarehouseManager = new WarehouseManager { Id = wm.Id };
                     purchaseOrder.SalePoint = new SalePoint { Id = long.Parse(collection["SalePoint"]) };

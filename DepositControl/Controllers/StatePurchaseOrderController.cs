@@ -51,7 +51,7 @@ namespace DepositControl.Controllers
                 List<StatePurchaseOrder> statePurchaseOrders = StatePurchaseOrder.Dao.GetAll().ToList();
                 ViewBag.Delete = Current.User.HasAccess("StatePurchaseOrderDelete");
                 ViewBag.New = Current.User.HasAccess("StatePurchaseOrderCreate");
-                ViewBag.New = Current.User.HasAccess("StatePurchaseOrderEdit");
+                ViewBag.Edit = Current.User.HasAccess("StatePurchaseOrderEdit");
                 return View(statePurchaseOrders);
             }
             catch (Exception ex)
@@ -79,6 +79,7 @@ namespace DepositControl.Controllers
                 }).ToList();
                 ViewBag.Delete = Current.User.HasAccess("StatePurchaseOrderDelete");
                 ViewBag.New = Current.User.HasAccess("StatePurchaseOrderCreate");
+                ViewBag.Edit = Current.User.HasAccess("StatePurchaseOrderEdit");
                 return View(statePurchaseOrders);
             }
             catch (Exception ex)

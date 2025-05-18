@@ -72,7 +72,13 @@ namespace DepositControl.Controllers
         {
             try
             {
-                var filters = new { Code = "Active", Date = dateFilter, StateDeliveryNote_Id = stateFilter, Number = numero };
+                var filters = new 
+                { 
+                    Code = IsAdmin() ? null : "Active",
+                    Date = dateFilter, 
+                    StateDeliveryNote_Id = stateFilter, 
+                    Number = numero 
+                };
                 List<DeliveryNote> deliveryNotes = DeliveryNote.Dao.GetByFilter(filters).ToList();
                 deliveryNotes.LoadRelation(dn => dn.StateDeliveryNote);
 
@@ -124,7 +130,7 @@ namespace DepositControl.Controllers
 
                 var filters = new
                 {
-                    Code = "Active",
+                    Code = IsAdmin() ? null : "Active",
                     Date = dateFilter,
                     StateDeliveryNote_Id = stateId,
                     Number = number
