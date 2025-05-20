@@ -737,6 +737,10 @@ namespace DepositControl.Controllers
                             }
                         }
                     }
+                    if (IsAdmin())
+                    {
+                        purchaseOrder.Date = Convert.ToDateTime(collection["Date"]).Date;
+                    }
                     purchaseOrder.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
                     purchaseOrder.StatePurchaseOrder = new StatePurchaseOrder { Id = newStateId };
                     purchaseOrder.SalePoint = new SalePoint { Id = long.Parse(collection["SalePoint.Id"]) };

@@ -665,14 +665,14 @@ namespace DepositControl.Controllers
                                             Code = "Active"
                                         };
                                         detail.Save();
-                                        product.Stock.Quantity += quantity;
-                                        product.Stock.Save();
-                                        if (product.Stock.Quantity <= 5)
-                                            product.StateProduct = new StateProduct { Id = 4 };
-                                        else
-                                            product.StateProduct = new StateProduct { Id = 1 };
-                                        product.Save();
                                     }
+                                    product.Stock.Quantity += quantity;
+                                    product.Stock.Save();
+                                    if (product.Stock.Quantity <= 5)
+                                        product.StateProduct = new StateProduct { Id = 4 };
+                                    else
+                                        product.StateProduct = new StateProduct { Id = 1 };
+                                    product.Save();
                                     StockMovement.Dao.DeleteByDeliveryNoteDetailId(productId, deliveryNoteId);
                                     StockMovement stockMovement = new StockMovement
                                     {
@@ -829,32 +829,6 @@ namespace DepositControl.Controllers
                             }
                             deliveryNote.Date = Convert.ToDateTime(collection["Date"]).Date;
                             deliveryNote.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
-                            string input = collection["Number"];
-                            if (!string.IsNullOrEmpty(input) && input.All(char.IsDigit) && input.Length <= 8)
-                            {
-                                string fullNumber = input.PadLeft(8, '0');
-
-                                if (deliveryNote.Number != fullNumber)
-                                {
-                                    var allDeliveryNotes = DeliveryNote.Dao.GetAll();
-                                    bool exists = allDeliveryNotes.Any(dn => dn.Number == fullNumber);
-
-                                    if (exists)
-                                    {
-                                        ViewBag.Alert = "El número ya está registrado.";
-                                        FillDropdowns();
-                                        return View(deliveryNote);
-                                    }
-                                    else
-                                    {
-                                        deliveryNote.Number = fullNumber;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                ViewBag.Alert = "El número debe contener solo dígitos numéricos y tener hasta 8 caracteres.";
-                            }
                             deliveryNote.StateDeliveryNote = new StateDeliveryNote { Id = long.Parse(collection["StateDeliveryNote.Id"]) };
                             deliveryNote.WarehouseManager = new WarehouseManager { Id = wm.Id };
                             deliveryNote.Save();
@@ -899,7 +873,36 @@ namespace DepositControl.Controllers
                                 }
                             }
                         }
-                            
+
+                    }
+                    string input = collection["Number"];
+                    if (!string.IsNullOrEmpty(input) && input.All(char.IsDigit) && input.Length <= 8)
+                    {
+                        string fullNumber = input.PadLeft(8, '0');
+                        if (fullNumber != deliveryNote.Number)
+                        {
+                            var allDeliveryNotes = DeliveryNote.Dao.GetAll();
+                            bool exists = allDeliveryNotes.Any(dn => dn.Number == fullNumber);
+
+                            if (exists)
+                            {
+                                ViewBag.Alert = "El número ya está registrado.";
+                                FillDropdowns();
+                                return View(deliveryNote);
+                            }
+                            else
+                            {
+                                deliveryNote.Number = fullNumber;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Alert = "El número debe contener solo dígitos numéricos y tener hasta 8 caracteres.";
+                    }
+                    if (IsAdmin())
+                    {
+                        deliveryNote.Date = Convert.ToDateTime(collection["Date"]).Date;
                     }
                     deliveryNote.TotalAmount = Convert.ToDecimal(collection["TotalAmount"]);
                     deliveryNote.StateDeliveryNote = new StateDeliveryNote { Id = newStateId };

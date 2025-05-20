@@ -76,14 +76,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var producto in Model)
+                    @if (!Model.Any())
                     {
                         <tr>
-                            <td style="text-align:left;">@producto.Name</td>
-                            <td>
-                                <span class="stock-red">@producto.Stock.Quantity unidades</span>
+                            <td colspan="2" style="text-align:center; color: #888;">
+                                No hay productos con bajo stock
                             </td>
                         </tr>
+                    }
+                    else
+                    {
+                        foreach (var producto in Model)
+                        {
+                            <tr>
+                                <td style="text-align:left;">@producto.Name</td>
+                                <td>
+                                    <span class="stock-red">@producto.Stock.Quantity unidades</span>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
