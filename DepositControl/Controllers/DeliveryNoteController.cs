@@ -262,10 +262,11 @@ namespace DepositControl.Controllers
                         if (string.IsNullOrEmpty(collection[$"{prefix}.Product"]))
                             throw new Exception("Debe seleccionar al menos un producto.");
 
-                        if (string.IsNullOrEmpty(collection[$"{prefix}.Quantity"]))
-                            throw new Exception("La cantidad no puede ser cero.");
+                        var quantityStr = collection[$"{prefix}.Quantity"];
+
+                        if (string.IsNullOrEmpty(quantityStr) || !int.TryParse(quantityStr, out int quantity) || quantity <= 0)
+                            throw new Exception("La cantidad no puede ser cero o menor a cero.");
                         long productId = long.Parse(collection[$"{prefix}.Product"]);
-                        int quantity = Convert.ToInt32(collection[$"{prefix}.Quantity"]);
                         Product fullProduct = Product.Dao.Get(productId);
                         if (fullProduct == null)
                             throw new Exception($"El producto con ID {productId} no se encontró.");
